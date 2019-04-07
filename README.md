@@ -1,2 +1,3 @@
-# ResearchPlayground
-This repository is used to microbenchmarking research ideas.
+# Research Playground
+
+This repository is used to prototyping research ideas.
