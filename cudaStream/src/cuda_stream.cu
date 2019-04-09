@@ -18,8 +18,8 @@ int main(int argc, char * argv[])
 
         desc.add_options()
                 ("help,h", "Helping Message")
-                ("batch-size", value < std::size_t > (), "Batch Size")
-                ("input-size", value < std::size_t > (), "Input Size");
+                ("batch-size,b", value < std::size_t > (), "Batch Size")
+                ("input-size,i", value < std::size_t > (), "Input Size");
         variables_map vm;
         store(parse_command_line(argc, argv, desc), vm);
 
