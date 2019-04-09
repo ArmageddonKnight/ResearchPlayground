@@ -25,8 +25,6 @@ if __name__ == '__main__':
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
-        Y_I, Y_H = sess.run((Y_I, Y_H), 
-                feed_dict={
+        sess.run((Y_I, Y_H), feed_dict={
                     I : np.ones(shape=[batch_size, input_size]),
                     H : np.ones(shape=[batch_size, input_size])})
-        print(Y_I, Y_H)

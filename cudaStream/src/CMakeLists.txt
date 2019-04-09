@@ -14,5 +14,5 @@ target_link_libraries     (cudaStream_main PUBLIC
 	-lcublas ${Boost_LIBRARIES})
 
 set_target_properties(cudaStream_main PROPERTIES 
-	RUNTIME_OUTPUT_NAME cudaStreamMB
+	RUNTIME_OUTPUT_NAME cudaStreamMicroBench
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

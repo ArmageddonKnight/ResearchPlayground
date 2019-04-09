@@ -1,4 +1,5 @@
 import mxnet as mx
+
 import argparse
 
 parser = argparse.ArgumentParser(description='MXNet Dense2 Microbenchmark')
@@ -28,11 +29,10 @@ if __name__ == '__main__':
             W_i2h=(state_size, input_size),
             W_h2h=(state_size, input_size))
     
-    exec_outputs = exec.forward(is_train=False, 
+    exec.forward(is_train=False, 
             I=mx.nd.ones(shape=(batch_size, input_size)),
             H=mx.nd.ones(shape=(batch_size, input_size)),
             W_i2h=mx.nd.ones(shape=(state_size, input_size)),
             W_h2h=mx.nd.ones(shape=(state_size, input_size)))
 
-    print(exec_outputs[0].asnumpy(), \
-          exec_outputs[1].asnumpy())
+    mx.nd.waitall()
