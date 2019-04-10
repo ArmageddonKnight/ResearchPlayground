@@ -12,4 +12,4 @@ RUN apt-get update && \
 
 RUN pip3 install --upgrade pip
 
-RUN pip3 install mxnet-cu92==1.4.0
+RUN pip3 install mxnet-cu90==1.3.0
