@@ -1,7 +1,5 @@
 #include <cublas_v2.h>
 
-#include <cupti.h>
-
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 
