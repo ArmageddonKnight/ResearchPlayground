@@ -1,4 +1,12 @@
-
+/**
+ * 
+ * 
+ * 
+ *   \todo Given that matrix multiplies are also doing reduction, 
+ *           why are we allowed to put them into white-list?
+ *         Especially given that summation is put into the black-list.
+ *   \todo What is the point of forcing the Batch-Normalization to be **V2**?
+ */
 
 #include <string>
 #include <unordered_set>
@@ -27,7 +35,6 @@ public:
         ///                  to run the TensorFlow model.
         /// \param nodes_to_preserve Set of Nodes to **Preserve**
         /// \param graph Graph to be Optimized, Member of `GrapplerItem`
-
         AutoMixedPrecisionImpl(Cluster * cluster, 
                 const std::unordered_set < std::string > & 
                         nodes_to_preserve,
@@ -71,20 +78,43 @@ private:
                 const std::unordered_map < std::string, TypeAttrId > & write_ops,
                 const std::unordered_map < std::string, TypeAttrId > &  read_ops,
                 DataStructureOpsMap * object_clients_map) const;
-        /// 
-        void AddWhitelistOps(std::unordered_set < int > * white_set) const;
-        void PropagateBlackFwdThroughClearAndGray(
-                std::unordered_set < int > * black_set) const;
+        /// \brief Make sure that colors are consistent between data structure ops.
+        ///        This method is invoked after every color propagation.
         void ForceColorMatchBetweenDataStructureOps(
                 const DataStructureOpsMap & object_clients_map,
                 std::unordered_set < int > * white_set,
                 std::unordered_set < int > * black_set) const;
+        // =====================================================================
+        /// \name Pass \#1. Add the white-list ops.
+        /// @{
+        // =====================================================================
+        /// \brief Initialize the set of **white** nodes.
+        void AddWhitelistOps(std::unordered_set < int > * white_set) const;
+        /// @}
+        // =====================================================================
+        /// \name Pass \#2. Propagate **black** nodes through **clear** and **grey** nodes.
+        /// @{
+        // =====================================================================
+        void PropagateBlackFwdThroughClearAndGray(
+                      std::unordered_set < int > * black_set) const;
+        /// @}
+        // =====================================================================
+        /// \name Pass \#3. Set **clear** and **grey** nodes to white 
+        ///                   if they are between **white** nodes.
+        /// @{
+        // =====================================================================
         void AddClearAndGrayToWhiteIfBetweenWhite(
                 const std::unordered_set < int > & black_set,
                       std::unordered_set < int > * white_set) const;
+        /// @}
+        // =====================================================================
+        /// \name Pass \#4. Propagate **whites** nodes through **clear** nodes.
+        /// @{
+        // =====================================================================
         void PropagateWhiteThroughClear(
                 const std::unordered_set < int > & black_set,
                       std::unordered_set < int > * white_set) const;
+        // =====================================================================
         Status ForceColorMatchOnRecurrentEdges(
                 std::unordered_set < int > * white_set) const;
         void MakeCastsWhiteIfAllOutputsWhite(
