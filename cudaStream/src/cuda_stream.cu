@@ -1,11 +1,11 @@
+#include <iostream>
+// Program Options
+#include <boost/program_options.hpp>
+// CUDA Headers
 #include <cublas_v2.h>
-
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
-
-#include <iostream>
-#include <boost/program_options.hpp>
-
+// Helper Functions
 #include "helper_cuda.h"
 
 int main(int argc, char * argv[])
