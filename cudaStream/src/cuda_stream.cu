@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
 
         if (!vm.count("batch-size") || !vm.count("input-size"))
         {
-                std::cerr << "[ERROR] Tensor shapes must be provided." << std::endl;
+                std::cerr << "[E] Tensor shapes must be provided." << std::endl;
                 exit(EXIT_FAILURE);
         } 
 
@@ -31,9 +31,9 @@ int main(int argc, char * argv[])
                     input_size = vm["input-size"].as < std::size_t > ();
         std::size_t state_size = 4 * input_size;
 
-        std::cout << "[INFO] B = " << batch_size << ", "
-                            "I = " << input_size << ", "
-                            "H = " << state_size << std::endl;
+        std::cout << "[I] B = " << batch_size << ", " 
+                      << "I = " << input_size << ", "
+                      << "H = " << state_size << std::endl;
 
         thrust::device_vector < float > I     (batch_size * input_size, 1.0f);
         thrust::device_vector < float > H     (batch_size * input_size, 1.0f);
