@@ -13,7 +13,6 @@ int main(int argc, char * argv[])
         using namespace boost::program_options;
 
         options_description desc ("cudaStream Microbenchmark Program Options");
-
         desc.add_options()
                 ("help,h", "Helping Message")
                 ("batch-size,b", value < std::size_t > (), "Batch Size")
