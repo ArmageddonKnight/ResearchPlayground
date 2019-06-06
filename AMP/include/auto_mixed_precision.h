@@ -1,11 +1,7 @@
-/**
- * 
- * 
- * 
- *   \todo Given that matrix multiplies are also doing reduction, 
- *           why are we allowed to put them into white-list?
- *         Especially given that summation is put into the black-list.
- *   \todo What is the point of forcing the Batch-Normalization to be **V2**?
+/** \todo Given that matrix multiplies are also doing reduction, 
+ *          why are we allowed to put them into white-list?
+ *        Especially given that summation is put into the black-list.
+ *  \todo What is the point of forcing the Batch-Normalization to be **V2**?
  */
 
 #include <string>
