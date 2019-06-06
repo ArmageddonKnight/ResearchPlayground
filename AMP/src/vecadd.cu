@@ -6,17 +6,18 @@
 
 #include <helper_cuda.h>
 
-template < typename DTypeT, std::size_t N >
-__global__ void cudaVecAdd(
-        const DTypeT * const A,
-        const DTypeT * const B,
-              DTypeT * const C)
+template < typename DTypeT >
+__device__ __forceinline__ DTypeT __2dtype(const float  val);
+
+template < typename DTypeT, std::size_t SizeT >
+__global__ void cudaVecAdd(float * const A)
 {
         const unsigned g_threadIdx = threadIdx.x + blockIdx.x * blockDim.x;
 
-        if (g_threadIdx < N)
+        if (g_threadIdx < SizeT)
         {
-                C[g_threadIdx] = A[g_threadIdx] + B[g_threadIdx];
+                A[g_threadIdx] = __2dtype < DTypeT > (1.0f) + 
+                                 __2dtype < DTypeT > (1e-4f);
         }
 }
 
@@ -39,7 +40,7 @@ std::ostream & operator<<(std::ostream & cout_,
                         {
                                 break;
                         }
-                        cout_ << (dev_vec[i * 10 + j]) << ", ";
+                        cout_ << dev_vec[i * 10 + j] << ", ";
                 }
                 cout_ << std::endl;
         }
@@ -51,20 +52,16 @@ std::ostream & operator<<(std::ostream & cout_,
 template < typename DTypeT, std::size_t SizeT >
 void vecadd()
 {
-        thrust::device_vector < DTypeT > A (SizeT, 1);
-        thrust::device_vector < DTypeT > B (SizeT, 1);
-        thrust::device_vector < DTypeT > C (SizeT, 0);
+        thrust::device_vector < float > A (SizeT);
 
         const std::size_t threads_per_block = 32;
         const std::size_t blocks_per_grid = (SizeT + threads_per_block - 1) / threads_per_block;
         cudaVecAdd < DTypeT, SizeT > 
                 <<< blocks_per_grid, 
                     threads_per_block >>> 
-                (A.data().get(), 
-                 B.data().get(), 
-                 C.data().get());
+                (A.data().get());
         checkCudaErrors(cudaDeviceSynchronize());
-        std::cout << C << std::endl;
+        std::cout << A << std::endl;
 }
 
 int main()
@@ -74,3 +71,8 @@ int main()
 
         return 0;
 }
+
+template <>
+float __2dtype < float > (const float val) { return val; }
+template <>
+half  __2dtype < half >  (const float val) { return __float2half(val); }

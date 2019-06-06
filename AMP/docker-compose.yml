@@ -3,7 +3,7 @@ version: '2.3'
 
 services:
     amp-vecadd:
-        image: cmake-cu90:latest
+        image: cmake-gpu:latest
         build:
             context: .
             dockerfile: cmake-cu90.Dockerfile
