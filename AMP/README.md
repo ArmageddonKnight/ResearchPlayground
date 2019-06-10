@@ -1,4 +1,4 @@
-# Automatic Mixed Precision
+# [Automatic Mixed Precision](https://v2.overleaf.com/read/hdkrbqcdwjzc)
 
 *Study Notes of Automatic Mixed Precision Training*
 
