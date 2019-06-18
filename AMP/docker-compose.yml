@@ -5,7 +5,7 @@ services:
     amp-vecadd:
         image: cmake-gpu:latest
         build:
-            context: .
+            context: ../dockerfiles
             dockerfile: cmake-cu90.Dockerfile
         volumes:
             - .:/mnt
