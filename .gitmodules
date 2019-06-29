@@ -1,6 +1,3 @@
-[submodule "nnvm"]
-	path = nnvm
-	url = https://github.com/dmlc/nnvm
 [submodule "AMP/benchmarks/DeepLearningExamples"]
 	path = AMP/benchmarks/DeepLearningExamples
 	url = https://github.com/NVIDIA/DeepLearningExamples
