@@ -48,16 +48,17 @@ std::ostream & operator<<(std::ostream & cout_,
         return cout_;
 }
 
-/// \brief Top-Level Vector-Add Benchmark
+/// @brief Top-Level Vector-Add Benchmark
 template < typename DTypeT, std::size_t SizeT >
 void vecadd()
 {
         thrust::device_vector < float > A (SizeT);
 
         const std::size_t threads_per_block = 32;
-        const std::size_t blocks_per_grid = (SizeT + threads_per_block - 1) / threads_per_block;
+        const std::size_t  blocks_per_grid  = 
+                (SizeT + threads_per_block - 1) / threads_per_block;
         cudaVecAdd < DTypeT, SizeT > 
-                <<< blocks_per_grid, 
+                <<<  blocks_per_grid, 
                     threads_per_block >>> 
                 (A.data().get());
         checkCudaErrors(cudaDeviceSynchronize());
