@@ -7,10 +7,14 @@
 #include <helper_cuda.h>
 
 template < typename DTypeT >
-__device__ __forceinline__ DTypeT __2dtype(const float  val);
+__device__ __forceinline__ DTypeT __2dtype (const float  val);
+
+template < typename DTypeT >
+__device__ __forceinline__ DTypeT __sigmoid(const DTypeT val);
 
 template < typename DTypeT, std::size_t SizeT >
-__global__ void cudaVecAdd(float * const A)
+__global__ void cudaVecAdd(
+        float * const A)
 {
         const unsigned g_threadIdx = threadIdx.x + blockIdx.x * blockDim.x;
 
@@ -18,6 +22,20 @@ __global__ void cudaVecAdd(float * const A)
         {
                 A[g_threadIdx] = __2dtype < DTypeT > (1.0f) + 
                                  __2dtype < DTypeT > (1e-4f);
+        }
+}
+
+template < typename DTypeT, std::size_t SizeT >
+__global__ void cudaVecSigmoidActv(
+        float * const A)
+{
+        const unsigned g_threadIdx = threadIdx.x + blockIdx.x * blockDim.x;
+
+        if (g_threadIdx < SizeT)
+        {
+                A[g_threadIdx] = __sigmoid(
+                                 __2dtype < DTypeT > (65504.0f) + 
+                                 __2dtype < DTypeT > (65504.0f));
         }
 }
 
@@ -57,7 +75,15 @@ void vecadd()
         const std::size_t threads_per_block = 32;
         const std::size_t  blocks_per_grid  = 
                 (SizeT + threads_per_block - 1) / threads_per_block;
+        //======================================================================
         cudaVecAdd < DTypeT, SizeT > 
+                <<<  blocks_per_grid, 
+                    threads_per_block >>> 
+                (A.data().get());
+        checkCudaErrors(cudaDeviceSynchronize());
+        std::cout << A << std::endl;
+        // =====================================================================
+        cudaVecSigmoidActv < DTypeT, SizeT > 
                 <<<  blocks_per_grid, 
                     threads_per_block >>> 
                 (A.data().get());
@@ -73,7 +99,20 @@ int main()
         return 0;
 }
 
-template <>
-float __2dtype < float > (const float val) { return val; }
-template <>
-half  __2dtype < half >  (const float val) { return __float2half(val); }
+template <> float __2dtype  < float > (const float val) 
+{ 
+        return val; 
+}
+template <> half  __2dtype  < half >  (const float val) 
+{ 
+        return __float2half(val); 
+}
+template <> float __sigmoid < float > (const float val) 
+{ 
+        return 1.0f / (1.0f +  exp(-val)); 
+}
+template <> half  __sigmoid < half >  (const half  val) 
+{ 
+        return __2dtype < half > (1.0f) / 
+              (__2dtype < half > (1.0f) + hexp(-val)); 
+}
