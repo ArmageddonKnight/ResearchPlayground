@@ -25,7 +25,7 @@ if __name__ == '__main__':
             weight=W_i2h,
             no_bias=True,
             num_hidden=state_size)
-    Y_I = mx.sym.BatchNorm(Y_I)
+    # Y_I = mx.sym.BatchNorm(Y_I)
 
     exec = Y_I.simple_bind(ctx=mx.gpu(), 
                 I=(batch_size, input_size), 
