@@ -1,3 +1,0 @@
-[submodule "AMP/benchmarks/DeepLearningExamples"]
-	path = AMP/benchmarks/DeepLearningExamples
-	url = https://github.com/NVIDIA/DeepLearningExamples
