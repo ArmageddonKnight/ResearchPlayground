@@ -2,10 +2,10 @@ version: '2.3'
 
 services:
     fp16-vecadd:
-        image: cmake-gpu:latest
+        image: cmake-gpu:3144.100.763
         build:
             context: ../dockerfiles
-            dockerfile: cmake-cu90.Dockerfile
+            dockerfile: cmake-cu100.Dockerfile
         volumes:
             - .:/mnt
         runtime: nvidia
