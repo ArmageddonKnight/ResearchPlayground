@@ -16,5 +16,4 @@ services:
                           cmake -DCMAKE_CUDA_FLAGS='-arch=compute_61' ..
                       fi 
                       make all
-                      chown -R $$(stat -c '%u:%g' /mnt) .
-                      ./vecadd"
+                      chown -R $$(stat -c '%u:%g' /mnt) ."
