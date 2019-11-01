@@ -4,7 +4,7 @@
 #include <cuda.h>
 #include <nvrtc_helper.h>  // nvrtc.h
 
-const char * dynamic_parallelism = "                                            \n\
+const char * const nvrtc_dp = "                                                 \n\
 __global__ void child(float * out, std::size_t n)                               \n\
 {                                                                               \n\
         std::size_t g_threadIdx = blockIdx.x +                                  \n\
@@ -28,5 +28,4 @@ int main(int argc, char * argv[])
         std::size_t num_blocks = 32, num_threads = 128;
 
         nvrtcProgram prog;
-
 }

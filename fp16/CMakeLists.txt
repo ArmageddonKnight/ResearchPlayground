@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-set(CMAKE_C_STANDARD 11)
-project(nvrtc_dp LANGUAGES CXX CUDA)
+set(CMAKE_CXX_STANDARD 11)
+project(cuda_stream LANGUAGES CXX CUDA)
 
 add_subdirectory(src)
