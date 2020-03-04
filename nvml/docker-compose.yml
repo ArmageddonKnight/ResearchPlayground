@@ -1,0 +1,20 @@
+version: '2.3'
+
+services:
+    cuda-dev:
+        image: cmake-gpu:3144.100.763
+        build:
+            context: ../dockerfiles
+            dockerfile: cmake-cu100.Dockerfile
+        runtime: nvidia
+        volumes:
+            - .:/mnt
+        working_dir: /mnt
+        pid: host
+        command: >
+            bash -ce "mkdir -p build && cd build
+                      if [ ! -f 'Makefile' ]; then 
+                          cmake -DCMAKE_CUDA_FLAGS='-arch=compute_61' ..
+                      fi
+                      make all
+                      chown -R $$(stat -c '%u:%g' /mnt) ."

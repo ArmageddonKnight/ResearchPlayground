@@ -4,7 +4,7 @@ services:
     cuda-dev:
         image: cmake-gpu:3144.100.763
         build:
-            context: ./dockerfiles
+            context: ../dockerfiles
             dockerfile: cmake-cu100.Dockerfile
         runtime: nvidia
         volumes:
