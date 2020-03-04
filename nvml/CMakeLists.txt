@@ -6,4 +6,4 @@ add_executable(used_gpu_memory used_gpu_memory.cu)
 
 target_include_directories(used_gpu_memory PUBLIC
     /usr/local/cuda/samples/common/inc)
-target_link_libraries(used_gpu_memory PUBLIC -lnvidia-ml)
+target_link_libraries(used_gpu_memory PUBLIC nvidia-ml)
