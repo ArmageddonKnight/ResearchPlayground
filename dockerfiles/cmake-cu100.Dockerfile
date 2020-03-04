@@ -9,8 +9,8 @@ ENV CUDNN_MINOR_VERSION 6
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         cuda-samples-10-0 \
-        cuda-nsight-compute-10-1 \
-        cuda-nsight-systems-10-1 \
+        cuda-nsight-compute-10-2 \
+        cuda-nsight-systems-10-2 \
         libcudnn7=${CUDNN_VERSION}+cuda10.0 \
         libcudnn7-dev=${CUDNN_VERSION}+cuda10.0 \
         vim curl python3 \
