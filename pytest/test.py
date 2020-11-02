@@ -11,13 +11,12 @@ def n(request):
     print('setup once per each param', request.param)
     a, b = request.param
     print(a, b)
-    return request.param
+    return request.param[0]
 
 
 class TestFoo:
     def test_something(self, n):
-        assert n != 'D'
-    def test_something_else(self, n):
+        print(n)
         assert n != 'D'
 
 
