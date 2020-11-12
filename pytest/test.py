@@ -35,3 +35,12 @@ def mx_fixture(request):
 
 def test_tvm(mx_fixture):
     print(mx_fixture.in_arg_shapes)
+
+
+@pytest.yield_fixture
+def passwd():
+    return 0
+
+def test_passwd(passwd):
+    for i in range(5):
+        print(passwd)
