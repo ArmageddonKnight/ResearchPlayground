@@ -44,3 +44,26 @@ def passwd():
 def test_passwd(passwd):
     for i in range(5):
         print(passwd)
+
+
+class B:
+    __slots__ = 'b'
+    def __init__(self):
+        self.b = 10
+
+
+class A:
+    __slots__ = 'a'
+    def __init__(self):
+        self.a = [B()] * 5
+    def __setitem__(self, i, v):
+        print("setitem")
+        self.a[i] = v
+    def __getitem__(self, i):
+        print("getitem")
+        return self.a[i]
+
+def test_A():
+    a = A()
+    a[2].b = 5
+    print(a[2].b)
