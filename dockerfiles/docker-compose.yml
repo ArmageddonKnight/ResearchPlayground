@@ -1,0 +1,8 @@
+version: '2.3'
+
+services:
+    cpp-dev:
+        image: cppdev:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
