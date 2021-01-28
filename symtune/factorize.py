@@ -1,5 +1,11 @@
 import copy
+import argparse
 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--stride', type=int, nargs=2, default=(2, 2))
+args = parser.parse_args()
+print(args.stride)
 
 
 def factorize(f, depth, factors, stack=[], remainder=None):
