@@ -7,3 +7,10 @@ def B():
 
 
 A(*B(), 3)
+
+A = [1, 2, 3]
+
+for a in A:
+    if a == 3:
+        A.append(4)
+    print(a)
