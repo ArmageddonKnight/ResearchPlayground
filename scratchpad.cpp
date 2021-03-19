@@ -2,38 +2,31 @@
 #include <vector>
 #include <functional>
 
-enum class Direction { kForward, kBackward };
-
-template <typename TDomainElem, typename TDomainElemRepr, typename TMeetOp,
-          typename TFrameworkSubclass>
-class FrameworkDirAgnosticBase {
-protected:
-  FrameworkDirAgnosticBase() = default;
+struct A {
+  virtual void f() {
+    std::cout << "A" << std::endl;
+  }
 };
 
-/**
- * @brief  Dataflow Analysis Framework
- *
- * @tparam TDomainElem      Domain Element
- * @tparam TDomainElemRepr  Domain Element Representation
- * @tparam TDirection       Direction of Analysis
- * @tparam TMeetOp          Meet Operator
- */
-template <typename TDomainElem, typename TDomainElemRepr, Direction TDirection,
-          typename TMeetOp>
-class Framework {};
-
-template <typename TDomainElem, typename TDomainElemRepr,
-          typename TMeetOp>
-class Framework<TDomainElem, TDomainElemRepr, Direction::kForward, TMeetOp> :
-    public FrameworkDirAgnosticBase<TDomainElem, TDomainElemRepr, TMeetOp,
-                                    Framework<TDomainElem, TDomainElemRepr, Direction::kForward, TMeetOp>> {
-
+struct B : A {
+  void f() override {
+    std::cout << "B" << std::endl;
+  }
 };
+
+struct C : B {
+  void f() override {
+    std::cout << "C" << std::endl;
+  }
+};
+
+
 
 int main()
 {
-        Framework<int, bool, Direction::kForward, int> A;
+        A *a = new C();
+
+        a->f();
 
         return 0;
 }
