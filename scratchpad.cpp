@@ -21,12 +21,8 @@ struct C : B {
 };
 
 
-
-int main()
-{
-        A *a = new C();
-
-        a->f();
-
-        return 0;
+int main() {
+  A *a = new C();
+  a->f();
+  return 0;
 }
