@@ -2,27 +2,18 @@
 #include <vector>
 #include <functional>
 
-struct A {
-  virtual void f() {
-    std::cout << "A" << std::endl;
-  }
-};
 
-struct B : A {
-  void f() override {
-    std::cout << "B" << std::endl;
-  }
-};
-
-struct C : B {
-  void f() override {
-    std::cout << "C" << std::endl;
-  }
-};
+const struct A {
+  int a;
+  int b;
+  int c;
+  int d;
+} a = {1, 2, 3, 4};
 
 
 int main() {
-  A *a = new C();
-  a->f();
+
+  std::cout << a.a << std::endl;
+
   return 0;
 }
