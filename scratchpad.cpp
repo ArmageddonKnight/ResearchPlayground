@@ -1,28 +1,24 @@
 #include <iostream>
+#include <memory>
 #include <vector>
-#include <functional>
 
 struct A {
-  virtual void f() {
-    std::cout << "A" << std::endl;
-  }
+  virtual ~A() = default;
 };
 
 struct B : A {
-  void f() override {
-    std::cout << "B" << std::endl;
-  }
 };
-
-struct C : B {
-  void f() override {
-    std::cout << "C" << std::endl;
-  }
-};
-
 
 int main() {
-  A *a = new C();
-  a->f();
+  std::shared_ptr<A> a(new A());
+  std::shared_ptr<B> b = std::dynamic_pointer_cast<B>(a);
+
+  if (b) {
+    std::cout << "Downcast is successful";
+  } else {
+    std::cout << "It is not";
+  }
+  std::cout << std::endl;
+
   return 0;
 }

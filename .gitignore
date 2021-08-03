@@ -3,6 +3,7 @@ build
 __pycache__
 *.pyc
 *.png
+a.out
 
 # IDE
 .vscode
