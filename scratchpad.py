@@ -1,16 +1,10 @@
-def A(a, b, c):
-    print(a, b, c)
+class A:
+    def f(self):
+        print("A")
 
+class B(A):
+    def f(self):
+        super().f()
+        print("B")
 
-def B():
-    return 2, 3
-
-
-A(*B(), 3)
-
-A = [1, 2, 3]
-
-for a in A:
-    if a == 3:
-        A.append(4)
-    print(a)
+B().f()
