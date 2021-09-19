@@ -1,10 +1,12 @@
-class A:
+import abc
+
+class A(abc.ABC):
+    @abc.abstractmethod
     def f(self):
-        print("A")
+        pass
 
 class B(A):
-    def f(self):
-        super().f()
-        print("B")
+    def f(self, b):
+        print(b)
 
-B().f()
+B().f(3)
