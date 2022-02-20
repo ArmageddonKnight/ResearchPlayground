@@ -1,0 +1,13 @@
+version: '2.3'
+
+services:
+    jupyter-dev:
+        image: jupyter:DietCode
+        build:
+            context: ./dockerfiles
+            dockerfile: jupyter.Dockerfile
+        network: "host"
+        runtime: nvidia
+        volumes:
+            - .:/mnt
+        working_dir: /mnt
