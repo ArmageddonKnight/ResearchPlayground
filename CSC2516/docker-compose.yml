@@ -6,7 +6,7 @@ services:
         build:
             context: ./dockerfiles
             dockerfile: jupyter.Dockerfile
-        network: "host"
+        network_mode: "host"
         runtime: nvidia
         volumes:
             - .:/mnt

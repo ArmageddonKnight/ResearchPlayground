@@ -24,7 +24,7 @@ RUN apt-get update && \
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        vim build-essential python3-dev && \
+        vim build-essential python3-dev wget curl && \
     ln -s /usr/bin/python3 /usr/bin/python && \
     rm -rf /var/lib/apt/lists/*
 
@@ -37,15 +37,17 @@ RUN pip install cmake
 # Jupyter Notebook
 # ==============================================================================
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libgl1 && \
+    apt-get install -y --no-install-recommends libgl1 python3-opencv && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install pandas opencv jupyter_http_over_ws
+RUN pip install pandas jupyter_http_over_ws
 
 RUN jupyter serverextension enable --py jupyter_http_over_ws
 
-RUN printf "RUN_NOTEBOOK='jupyter notebook \
+RUN printf "RUN_NOTEBOOK='jupyter notebook --allow-root \
 --NotebookApp.allow_origin='https://colab.research.google.com' \
 --port=8888 \
 --NotebookApp.port_retries=0'\n" >> /root/.bashrc
