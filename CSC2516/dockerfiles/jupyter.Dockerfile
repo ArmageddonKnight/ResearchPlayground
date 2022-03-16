@@ -56,5 +56,5 @@ RUN printf "RUN_NOTEBOOK='jupyter notebook --allow-root \
 # Other Dependencies
 # ==============================================================================
 
-RUN pip install numpy scipy
+RUN pip install numpy scipy matplotlib
 RUN pip install torch==1.7.0+cu110 torchvision==0.8.1+cu110 -f https://download.pytorch.org/whl/torch_stable.html

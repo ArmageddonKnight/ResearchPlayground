@@ -2,7 +2,7 @@ version: '2.3'
 
 services:
     jupyter-dev:
-        image: jupyter:DietCode
+        image: jupyter:dev
         build:
             context: ./dockerfiles
             dockerfile: jupyter.Dockerfile
