@@ -1,2 +1,9 @@
 content
+cora
+results
+results_gan
+video
+
 PA03_data_20_*.csv
+*.pth
+*.tgz
