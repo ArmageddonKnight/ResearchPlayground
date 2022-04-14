@@ -17,7 +17,11 @@ services:
             context: ./dockerfiles
             dockerfile: nvvp.Dockerfile
         network_mode: "host"
+        environment:
+            - DISPLAY=:0
         runtime: nvidia
         volumes:
             - .:/mnt
+            - "~/.Xauthority:/root/.Xauthority:rw"
         working_dir: /mnt
+        privileged: true
