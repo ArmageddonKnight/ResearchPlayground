@@ -7,9 +7,7 @@ RUN apt-get update && \
     CUDA_VERSION_=$(printf ${CUDA_VERSION} | grep -oE '[0-9]+.[0-9]+') && \
     apt-get install -y --no-install-recommends \
         cuda-nvvp-${CUDA_VERSION_} \
-        libgl1 libfontconfig libxkbcommon-x11-0 \
-        libcudnn${CUDNN_MAJOR_VERSION}=${CUDNN_VERSION}*+cuda${CUDA_VERSION_} \
-        libcudnn${CUDNN_MAJOR_VERSION}-dev=${CUDNN_VERSION}*+cuda${CUDA_VERSION_} && \
+        libgl1 libfontconfig libxkbcommon-x11-0 && \
     rm -rf /var/lib/apt/lists/*
 
 # ==============================================================================
