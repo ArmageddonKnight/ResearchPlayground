@@ -11,3 +11,13 @@ services:
         volumes:
             - .:/mnt
         working_dir: /mnt
+    nvvp:
+        image: nvvp:11.2
+        build:
+            context: ./dockerfiles
+            dockerfile: nvvp.Dockerfile
+        network_mode: "host"
+        runtime: nvidia
+        volumes:
+            - .:/mnt
+        working_dir: /mnt
