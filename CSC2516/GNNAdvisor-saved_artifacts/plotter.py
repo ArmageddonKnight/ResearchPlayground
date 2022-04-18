@@ -131,7 +131,7 @@ if __name__ == '__main__':
                     va='center', 
                     bbox=dict(boxstyle='square', facecolor='white', linewidth=3),
                     arrowprops=dict(arrowstyle="-[, widthB=%f, lengthB=0.3" % 
-                        (0.46 / plt.ylim()[1] * annotation_fontsize * bar_length),
+                        (0.54 / plt.ylim()[1] * annotation_fontsize * bar_length),
                     linewidth=2))
             prev_side = side
             prev_percentage = vlist[i] / plt.ylim()[1]
@@ -143,7 +143,7 @@ if __name__ == '__main__':
 
     plt.xlim([-2*bar_width, 3 + 2*bar_width])
     plt.xticks([0, 3], ['GCN', 'GIN'])
-    plt.xlabel(xlabel)
+    # plt.xlabel(xlabel)
     plt.ylabel(ylabel)
 
     # Grid & Legend
