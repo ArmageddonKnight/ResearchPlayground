@@ -124,14 +124,14 @@ if __name__ == '__main__':
                 side = not prev_side
 
             plt.annotate('%.0f%%' % (vlist[i] * 100.0 / sum(vlist)),
-                    xy    =(x+0.55 * (1 if side is True else -1), middle_pos), 
-                    xytext=(x+0.7  * (1 if side is True else -1), middle_pos), 
+                    xy    =(x+0.53 * (1 if side is True else -1), middle_pos), 
+                    xytext=(x+0.68  * (1 if side is True else -1), middle_pos), 
                     fontsize=annotation_fontsize,
                     ha='left' if side is True else 'right', 
                     va='center', 
                     bbox=dict(boxstyle='square', facecolor='white', linewidth=3),
                     arrowprops=dict(arrowstyle="-[, widthB=%f, lengthB=0.3" % 
-                        (0.51 / plt.ylim()[1] * annotation_fontsize * bar_length),
+                        (0.46 / plt.ylim()[1] * annotation_fontsize * bar_length),
                     linewidth=2))
             prev_side = side
             prev_percentage = vlist[i] / plt.ylim()[1]
@@ -142,7 +142,7 @@ if __name__ == '__main__':
     annotate_list(gin_gpu_kernel_profile, 3, annotation_fontsize, True)
 
     plt.xlim([-2*bar_width, 3 + 2*bar_width])
-    plt.xticks([])
+    plt.xticks([0, 3], ['GCN', 'GIN'])
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
 
