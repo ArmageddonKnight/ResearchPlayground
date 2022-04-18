@@ -69,14 +69,14 @@ def rc_init(dpi=100, fontsize=24):
 
 if __name__ == '__main__':
     gin_gpu_kernel_profile, _ = \
-            parse_profile('citeseer-gin-2357.csv',
+            parse_profile('citeseer-gin.csv',
                           {lambda kernel_name: "sgemm" in kernel_name :
                            lambda kernel_name: "Transform",
                            lambda kernel_name: "spmm"  in kernel_name :
                            lambda kernel_name: "Aggregate"}
                            )
     gcn_gpu_kernel_profile, _ = \
-            parse_profile('citeseer-gcn-2319.csv',
+            parse_profile('citeseer-gcn.csv',
                           {lambda kernel_name: "sgemm" in kernel_name :
                            lambda kernel_name: "Transform",
                            lambda kernel_name: "spmm"  in kernel_name :
