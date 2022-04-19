@@ -1,0 +1,272 @@
+diff --git a/GNNAdvisor/GNNConv/GNNAdvisor.cpp b/GNNAdvisor/GNNConv/GNNAdvisor.cpp
+index c5584a6..be9d790 100644
+--- a/GNNAdvisor/GNNConv/GNNAdvisor.cpp
++++ b/GNNAdvisor/GNNConv/GNNAdvisor.cpp
+@@ -250,6 +250,89 @@ std::vector<torch::Tensor> build_part(
+   return {partPtr, part2Node};
+ }
+ 
++
++std::vector<torch::Tensor> gin_spmm_forward_cuda_v2(
++    torch::Tensor input,
++    torch::Tensor weight,
++    torch::Tensor workspace,
++    torch::Tensor row_pointers,
++    torch::Tensor column_index,
++    float epsilon,
++    torch::Tensor part_pointers,
++    torch::Tensor part2Node,
++    int partSize, 
++    int dimWorker, 
++    int warpPerBlock);
++
++std::vector<torch::Tensor> gin_spmm_backward_cuda_v2(
++    torch::Tensor d_output,
++    torch::Tensor input,
++    torch::Tensor weight,
++    torch::Tensor workspace,
++    torch::Tensor row_pointers,
++    torch::Tensor column_index,
++    float epsilon,
++    torch::Tensor part_pointers,
++    torch::Tensor part2Node,
++    int partSize, 
++    int dimWorker, 
++    int warpPerBlock);
++
++
++std::vector<torch::Tensor> gin_spmm_forward_v2(
++    torch::Tensor input,
++    torch::Tensor weight,
++    torch::Tensor workspace,
++    torch::Tensor row_pointers,
++    torch::Tensor column_index, 
++    float epsilon,
++    torch::Tensor part_pointers,
++    torch::Tensor part2Node,
++    int partSize, 
++    int dimWorker, 
++    int warpPerBlock) {
++  CHECK_INPUT(input);
++  CHECK_INPUT(weight);
++  CHECK_INPUT(row_pointers);
++  CHECK_INPUT(column_index);
++  CHECK_INPUT(part_pointers);
++  CHECK_INPUT(part2Node);
++
++  return gin_spmm_forward_cuda_v2(input, weight, workspace,
++                                  row_pointers, column_index, epsilon,
++                                  part_pointers, part2Node, partSize,
++                                  dimWorker, warpPerBlock);
++}
++
++std::vector<torch::Tensor> gin_spmm_backward_v2(
++    torch::Tensor d_output,
++    torch::Tensor input,
++    torch::Tensor weight,
++    torch::Tensor workspace,
++    torch::Tensor row_pointers,
++    torch::Tensor column_index,
++    float epsilon,
++    torch::Tensor part_pointers,
++    torch::Tensor part2Node,
++    int partSize, 
++    int dimWorker, 
++    int warpPerBlock) {
++  CHECK_INPUT(d_output);
++  CHECK_INPUT(input);
++  CHECK_INPUT(weight);
++  CHECK_INPUT(workspace);
++  CHECK_INPUT(row_pointers);
++  CHECK_INPUT(column_index);
++  CHECK_INPUT(part_pointers);
++  CHECK_INPUT(part2Node);
++
++  return gin_spmm_backward_cuda_v2(d_output, input, weight, workspace,
++                                   row_pointers, column_index, epsilon,
++                                   part_pointers, part2Node, partSize,
++                                   dimWorker, warpPerBlock);
++}
++
++
+ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+   m.def("SAG", &SAG, "GNNAdvisor base Scatter-and-Gather Kernel (CUDA)");
+ 
+@@ -259,5 +342,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
+   m.def("forward_gin", &spmm_forward_gin, "GNNAdvisor forward GIN (CUDA)");
+   m.def("backward_gin", &spmm_backward_gin, "GNNAdvisor forward GIN (CUDA)");
+ 
++  m.def("gin_forward_v2",  &gin_spmm_forward_v2,  "GNNAdvisor forward GIN (CUDA) Ver.2");
++  m.def("gin_backward_v2", &gin_spmm_backward_v2, "GNNAdvisor Backward GIN (CUDA) Ver.2");
++
+   m.def("build_part", &build_part, "GNNAdvisor backward (CPU)");
+-  }
+\ No newline at end of file
++}
+diff --git a/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu b/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu
+index fc2ef48..78e676a 100644
+--- a/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu
++++ b/GNNAdvisor/GNNConv/GNNAdvisor_kernel.cu
+@@ -556,6 +556,44 @@ __global__ void spmm_backward_cuda_kernel(
+ // Foward Pass (GIN)
+ //
+ ////////////////////////////////////////////
++
++
++// template <typename scalar_t, int C_HiddenDim, int C_PartSize, int C_WarpSize = 32>
++// __global__ void spmm_forward_cuda_kernel_gin_v2(
++//     torch::PackedTensorAccessor32<scalar_t, 2, torch::RestrictPtrTraits> output,
++//     torch::PackedTensorAccessor32<scalar_t, 2, torch::RestrictPtrTraits> input,
++//     torch::PackedTensorAccessor32<int, 1, torch::RestrictPtrTraits> row_pointers,
++//     torch::PackedTensorAccessor32<int, 1, torch::RestrictPtrTraits> column_index,
++//     const float epsilon,
++//     torch::PackedTensorAccessor32<int, 1, torch::RestrictPtrTraits> part_pointers,
++//     torch::PackedTensorAccessor32<int, 1, torch::RestrictPtrTraits> part2node,
++//     const int num_parts) {
++//   int globalThreadIdx =  blockIdx.x * blockDim.x + threadIdx.x;
++//   int warpIdx = globalThreadIdx / C_WarpSize;
++//   int blockWarpIdx = threadIdx.x / C_WarpSize;
++//   int laneIdx = threadIdx.x % C_WarpSize;
++
++//   extern __shared__ int part_meta[];
++//   int* const partial_ids = part_meta; 
++//   float* const partial_results =
++//       reinterpret_cast<float*>(&part_meta[partSize*warpPerBlock]);
++
++//   if (warpIdx < num_parts) {
++//     const int srcIdx = part2node[warpIdx],
++//               part_begin = part_pointers[warpIdx],
++//               part_end = part_pointers[warpIdx],
++//               part_idx_base = blockWarpIdx * C_PartSize;
++
++// #pragma unroll
++//     partial_ids = 
++
++// #pragma unroll
++//     for (int d = 0; d < C_HiddenDim; d += C_WarpSize){
++//       atomicAdd_F((float*)&output[srcIdx][d], epsilon * partial_results[presult_base + d]);
++//     }
++//   }  // if (warpIdx < num_parts)
++// }
++
+ std::vector<torch::Tensor> spmm_forward_cuda_gin(
+     torch::Tensor input,
+     torch::Tensor weight,
+@@ -811,4 +849,115 @@ __global__ void spmm_backward_cuda_kernel_gin(
+             atomicAdd_F((float*)&d_input[srcId][d], epsilon*partial_results[presult_base + d]);
+         }
+     }
+-}
+\ No newline at end of file
++}
++
++
++
++std::vector<torch::Tensor> gin_spmm_forward_cuda_v2(
++    torch::Tensor input,
++    torch::Tensor weight,
++    torch::Tensor workspace,
++    torch::Tensor row_pointers,
++    torch::Tensor column_index,
++    float epsilon,
++    torch::Tensor part_pointers,
++    torch::Tensor part2Node,
++    int partSize, 
++    int dimWorker, 
++    int warpPerBlock) {
++    workspace = torch::mm(input, weight);
++
++    const int dim = workspace.size(1);
++    const int num_nodes = workspace.size(0);
++    const int num_parts = part2Node.size(0);
++
++    const int block = warpPerBlock * WARP_SIZE;
++    const int grid = (num_parts * WARP_SIZE + block  - 1) / block;
++    const int shared_memory = warpPerBlock * partSize * sizeof(int) + warpPerBlock * dim * sizeof(float);
++
++    auto output = torch::zeros_like(workspace);
++
++    AT_DISPATCH_FLOATING_TYPES(input.type(), "gin_spmm_cuda_forward_v2", ([&] {
++                               spmm_forward_cuda_kernel_gin<scalar_t><<<grid, block, shared_memory>>>(
++
++                                   output.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
++                                   workspace.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
++
++                                   row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
++                                   column_index.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
++                                   epsilon,
++                                   part_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
++                                   part2Node.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
++                                   num_nodes, 
++                                   dim,
++                                   num_parts,
++                                   partSize, 
++                                   dimWorker, 
++                                   warpPerBlock
++                               );
++                               }));
++
++    // check for error
++    cudaError_t error = cudaGetLastError();
++    if(error != cudaSuccess)
++    {
++        // print the CUDA error message and exit
++        printf("CUDA error: %s\n", cudaGetErrorString(error));
++        exit(-1);
++    }
++    return {output};
++}
++
++
++std::vector<torch::Tensor> gin_spmm_backward_cuda_v2(
++    torch::Tensor d_output,
++    torch::Tensor input,
++    torch::Tensor weight,
++    torch::Tensor workspace,
++    torch::Tensor row_pointers,
++    torch::Tensor column_index,
++    float epsilon,
++    torch::Tensor part_pointers,
++    torch::Tensor part2Node,
++    int partSize, 
++    int dimWorker, 
++    int warpPerBlock) {
++
++    const int dim = workspace.size(1);
++    const int num_nodes = workspace.size(0);
++    const int num_parts = part2Node.size(0);
++
++    const int block = warpPerBlock * WARP_SIZE;
++    const int grid = (num_parts * WARP_SIZE + block - 1) / block; 
++    int shared_memory = partSize * warpPerBlock * sizeof(int) + warpPerBlock * dim * sizeof(float);
++
++    AT_DISPATCH_FLOATING_TYPES(d_output.type(), "gin_spmm_cuda_backward_v2", ([&] {
++                               spmm_backward_cuda_kernel_gin<scalar_t><<<grid, block, shared_memory>>>(
++
++                                   d_output.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
++                                   workspace.packed_accessor32<scalar_t,2,torch::RestrictPtrTraits>(),
++
++                                   row_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
++                                   column_index.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
++                                   epsilon,
++                                   part_pointers.packed_accessor32<int,1,torch::RestrictPtrTraits>(), 
++                                   part2Node.packed_accessor32<int,1,torch::RestrictPtrTraits>(),
++                                   num_nodes, 
++                                   dim,
++                                   num_parts,
++                                   partSize, 
++                                   dimWorker, 
++                                   warpPerBlock
++                               );
++                               }));
++
++    auto d_weight = torch::mm(input.transpose(0,1), workspace);
++    auto d_input  = torch::mm(workspace, weight.transpose(0,1));
++
++    cudaError_t error = cudaGetLastError();
++    if(error != cudaSuccess){
++        printf("CUDA error: %s\n", cudaGetErrorString(error));
++        exit(-1);
++    }
++    return {d_input, d_weight};
++}
