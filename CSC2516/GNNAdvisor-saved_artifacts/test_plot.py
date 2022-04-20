@@ -67,7 +67,57 @@ def rc_init(dpi=100, fontsize=24):
     plt.rc('font', family='Times New Roman', size=fontsize)
 
 
-if __name__ == '__main__':
+rc_init()
+bar_width, annotation_fontsize = 1, 18
+cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
+
+def plot_list(list, x):
+    legend_handles = []
+    klist = [kv[0] for kv in list]
+    vlist = [kv[1][0] if isinstance(kv[1], type([])) else kv[1] for kv in list]
+    for i in range(len(list)):
+        legend_handles.append(
+                plt.bar(x=x, height=vlist[i], bottom=np.sum(vlist[i+1:]),
+                    width=bar_width, edgecolor='black', linewidth=3,
+                    color=cycle[0] if klist[i] == "Transform" else
+                          cycle[1] if klist[i] == "Aggregate" else
+                          cycle[2] if klist[i] == "Log-Softmax"
+                          else 'white',
+                    label=klist[i]))
+    return legend_handles
+
+def annotate_list(list, x, annotation_fontsize, initial_side=True,
+                  force_annotate=lambda k: False):
+    vlist = [kv[1][0] if isinstance(kv[1], type([])) else kv[1] for kv in list]
+    side, prev_side = initial_side, initial_side
+    prev_pct = None
+    for i in range(len(list)):
+        middle_pos = vlist[i] / 2 + np.sum(vlist[i+1:])
+        bar_length = vlist[i]
+        curr_pct = vlist[i] / plt.ylim()[1]
+
+        if vlist[i] / plt.ylim()[1] < 0.05:
+            if not force_annotate(list[i][0]):
+                continue
+        if prev_pct is not None and (prev_pct < 0.1 or curr_pct < 0.05):
+            side = not prev_side
+
+        plt.annotate('%.0f%%' % (vlist[i] * 100.0 / sum(vlist)),
+                     xy    =(x+0.53 * (1 if side is True else -1), middle_pos), 
+                     xytext=(x+0.68 * (1 if side is True else -1), middle_pos), 
+                     fontsize=annotation_fontsize,
+                     ha='left' if side is True else 'right', 
+                     va='center', 
+                     bbox=dict(boxstyle='square', facecolor='white', linewidth=3),
+                     arrowprops=dict(arrowstyle="-[, widthB=%f, lengthB=0.3" % 
+                                                    (0.54 / plt.ylim()[1] * annotation_fontsize * bar_length),
+                                     linewidth=2)
+                     )
+        prev_side = side
+        prev_pct = curr_pct
+
+
+def test_gcn_and_gin():
     gin_gpu_kernel_profile, _ = \
             parse_profile('citeseer-gin.csv',
                           {lambda kernel_name: "sgemm" in kernel_name :
@@ -85,56 +135,11 @@ if __name__ == '__main__':
                            lambda kernel_name: "Log-Softmax"}
                           )
 
-    rc_init()
-
     xlabel = "\nGPU Runtime Profile"
     ylabel = r"Runtime ($\mathrm{ms}$)"
     fig_name = "GNN_nvprof_Results.png"
 
-    bar_width, annotation_fontsize = 1, 18
     plt.figure(figsize=(10, 6))
-
-    cycle = plt.rcParams['axes.prop_cycle'].by_key()['color']
-
-    def plot_list(list, x):
-        legend_handles = []
-        klist = [kv[0] for kv in list]
-        vlist = [kv[1][0] if isinstance(kv[1], type([])) else kv[1] for kv in list]
-        for i in range(len(list)):
-            legend_handles.append(
-                    plt.bar(x=x, height=vlist[i], bottom=np.sum(vlist[i+1:]),
-                        width=bar_width, edgecolor='black', linewidth=3,
-                        color=cycle[0] if klist[i] == "Transform" else
-                              cycle[1] if klist[i] == "Aggregate" else
-                              cycle[2] if klist[i] == "Log-Softmax"
-                              else 'white',
-                        label=klist[i]))
-        return legend_handles
-
-    def annotate_list(list, x, annotation_fontsize, initial_side=True):
-        vlist = [kv[1][0] if isinstance(kv[1], type([])) else kv[1] for kv in list]
-        side, prev_side = initial_side, initial_side
-        prev_percentage = None
-        for i in range(len(list)):
-            middle_pos = vlist[i] / 2 + np.sum(vlist[i+1:])
-            bar_length = vlist[i]
-            if vlist[i] / plt.ylim()[1] < 0.05:
-                continue
-            if prev_percentage is not None and prev_percentage < 0.1:
-                side = not prev_side
-
-            plt.annotate('%.0f%%' % (vlist[i] * 100.0 / sum(vlist)),
-                    xy    =(x+0.53 * (1 if side is True else -1), middle_pos), 
-                    xytext=(x+0.68  * (1 if side is True else -1), middle_pos), 
-                    fontsize=annotation_fontsize,
-                    ha='left' if side is True else 'right', 
-                    va='center', 
-                    bbox=dict(boxstyle='square', facecolor='white', linewidth=3),
-                    arrowprops=dict(arrowstyle="-[, widthB=%f, lengthB=0.3" % 
-                        (0.54 / plt.ylim()[1] * annotation_fontsize * bar_length),
-                    linewidth=2))
-            prev_side = side
-            prev_percentage = vlist[i] / plt.ylim()[1]
 
     gcn_handle = plot_list(gcn_gpu_kernel_profile, 0)
     gin_handle = plot_list(gin_gpu_kernel_profile, 3)
@@ -143,7 +148,6 @@ if __name__ == '__main__':
 
     plt.xlim([-2*bar_width, 3 + 2*bar_width])
     plt.xticks([0, 3], ['GCN', 'GIN'])
-    # plt.xlabel(xlabel)
     plt.ylabel(ylabel)
 
     # Grid & Legend
@@ -151,4 +155,45 @@ if __name__ == '__main__':
 
     plt.tight_layout()
     plt.legend(handles=gcn_handle)
+    plt.savefig(fig_name)
+
+
+
+def test_gin_vs_gin_v2():
+    gin_gpu_kernel_profile, _ = \
+            parse_profile('citeseer-gin.csv',
+                          {lambda kernel_name: "sgemm" in kernel_name :
+                           lambda kernel_name: "Transform",
+                           lambda kernel_name: "spmm"  in kernel_name :
+                           lambda kernel_name: "Aggregate"}
+                           )
+    gin_v2_gpu_kernel_profile, _ = \
+            parse_profile('citeseer-gin_v2.csv',
+                          {lambda kernel_name: "sgemm" in kernel_name :
+                           lambda kernel_name: "Transform",
+                           lambda kernel_name: "spmm"  in kernel_name :
+                           lambda kernel_name: "Aggregate"}
+                          )
+
+    xlabel = "\nGPU Runtime Profile"
+    ylabel = r"Runtime ($\mathrm{ms}$)"
+    fig_name = "GIN_vs_EarlyMLP.png"
+
+    plt.figure(figsize=(10, 6))
+
+    gin_handle = plot_list(gin_gpu_kernel_profile, 0)
+    gin_v2_handle = plot_list(gin_v2_gpu_kernel_profile, 3)
+    annotate_list(gin_gpu_kernel_profile, 0, annotation_fontsize, False)
+    annotate_list(gin_v2_gpu_kernel_profile, 3, annotation_fontsize, True,
+                  force_annotate=lambda k: True if k == "Aggregate" else False)
+
+    plt.xlim([-2*bar_width, 3 + 2*bar_width])
+    plt.xticks([0, 3], ['Baseline', 'EarlyMLP'])
+    plt.ylabel(ylabel)
+
+    # Grid & Legend
+    plt.grid(linestyle='-.', linewidth=1, axis='y')
+
+    plt.tight_layout()
+    plt.legend(handles=gin_handle)
     plt.savefig(fig_name)
