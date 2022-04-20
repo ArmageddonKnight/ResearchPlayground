@@ -197,3 +197,78 @@ def test_gin_vs_gin_v2():
     plt.tight_layout()
     plt.legend(handles=gin_handle)
     plt.savefig(fig_name)
+
+
+def save_legend(handles, title, ncol=5, alphas=None):
+    lgd_fig = plt.figure()
+    plt.axis('off')
+    lgd = plt.legend(handles=handles, loc='center', ncol=int(ncol))
+
+    if alphas is not None:
+        for i, text in enumerate(lgd.get_texts()):
+            text.set_alpha(alphas[i])
+
+    lgd_fig.canvas.draw()
+    plt.savefig(title, 
+                bbox_inches=lgd.get_window_extent().transformed(lgd_fig.dpi_scale_trans.inverted()))
+    plt.close()
+
+
+from collections import OrderedDict
+
+def test_perf():
+    fig = plt.figure(figsize=(10, 6))
+    buffer = []
+    num_measure_records = 0
+
+    latencies = OrderedDict()
+
+    perf_results = {}
+
+    for backend in ['DGL', 'GNNAdvisor', 'EarlyMLP']:
+        with open(f'gin-{backend}.csv') as fin:
+            csv_fin = csv.DictReader(fin)
+            for i, row in enumerate(csv_fin):
+                if row['dataset'] not in perf_results:
+                    perf_results[row['dataset']] = OrderedDict()
+                perf_results[row['dataset']][backend] = row['Avg.Epoch (ms)']
+
+    print(perf_results)
+
+    x = 0
+
+    legend_handles = []
+
+    for i, dataset in enumerate(['citeseer', 'cora']):
+        print(perf_results[dataset])
+        for j, result in enumerate(perf_results[dataset].items()):
+            bar_legend = plt.bar(x, float(result[1]), bar_width,
+                                 edgecolor='black', linewidth=3,
+                                 color=cycle[j], label=result[0])
+            if i == 0:
+                legend_handles.append(bar_legend)
+            x += bar_width
+        x += 3
+
+    x = 0
+
+    for i, dataset in enumerate(['citeseer', 'cora']):
+        for j, result in enumerate(perf_results[dataset].items()):
+            plt.text(x, 0.9 * plt.ylim()[1],
+                     r'$%.3f\times$' % (float(result[1]) / float(perf_results[dataset]['DGL'])),
+                     ha='center', backgroundcolor='white',
+                     rotation=45, fontsize=24,
+                     bbox=dict(boxstyle="round", fc='white', alpha=0.9, pad=0.2))
+            x += bar_width
+        x += 3
+
+    xticks = ((1, 7), ('CiteSeer', 'CORA'))
+    plt.xticks(*xticks)
+    plt.ylabel(r"Latency$/$Iteration ($\mathrm{ms}$)")
+
+    plt.grid(linestyle='-.', linewidth=1)
+
+    plt.tight_layout()
+    plt.savefig("EarlyMLP.png")
+
+    save_legend(legend_handles, 'EarlyMLP_legend.png')
