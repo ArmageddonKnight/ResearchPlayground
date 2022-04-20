@@ -217,7 +217,7 @@ def save_legend(handles, title, ncol=5, alphas=None):
 from collections import OrderedDict
 
 def test_perf():
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(12, 6))
     buffer = []
     num_measure_records = 0
 
@@ -265,7 +265,7 @@ def test_perf():
             plt.text(x, 0.9 * plt.ylim()[1],
                      r'$%.3f\times$' % (float(result[1]) / float(perf_results[dataset]['DGL'])),
                      ha='center', backgroundcolor='white',
-                     rotation=45, fontsize=15,
+                     rotation=45, fontsize=20,
                      bbox=dict(boxstyle="round", fc='white', alpha=0.9, pad=0.2))
             x += bar_width
         x += 3
@@ -276,7 +276,7 @@ def test_perf():
         plt.text(x, 0.9 * plt.ylim()[1],
                  r'$%.3f\times$' % (np.average([float(perf_results[d][result[0]]) for d in datasets_lowered]) / dgl_baseline_avg),
                  ha='center', backgroundcolor='white',
-                 rotation=45, fontsize=15,
+                 rotation=45, fontsize=20,
                  bbox=dict(boxstyle="round", fc='white', alpha=0.9, pad=0.2))
         x += bar_width
 
