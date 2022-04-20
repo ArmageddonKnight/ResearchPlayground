@@ -2,7 +2,7 @@ dataset,Avg.Epoch (ms)
 citeseer, 1.629
 cora, 1.642
 pubmed, 2.521
-ppi, 8.547
+ppi, 8.064
 PROTEINS_full, 3.607
 OVCAR-8H, 146.858
 Yeast, 131.283

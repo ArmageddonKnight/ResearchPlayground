@@ -239,30 +239,50 @@ def test_perf():
 
     legend_handles = []
 
-    for i, dataset in enumerate(['citeseer', 'cora']):
+    datasets = ['CiteSeer', 'CORA', 'Pubmed', 'PPI']
+    datasets_lowered = [d.lower() for d in datasets]
+
+    for i, dataset in enumerate(datasets_lowered):
         print(perf_results[dataset])
         for j, result in enumerate(perf_results[dataset].items()):
-            bar_legend = plt.bar(x, float(result[1]), bar_width,
-                                 edgecolor='black', linewidth=3,
+            bar_legend = plt.bar(x, float(result[1]),
+                                 bar_width, edgecolor='black', linewidth=3,
                                  color=cycle[j], label=result[0])
             if i == 0:
                 legend_handles.append(bar_legend)
             x += bar_width
         x += 3
+    for j, result in enumerate(perf_results['citeseer'].items()):
+        bar_legend = plt.bar(x, np.average([float(perf_results[d][result[0]]) for d in datasets_lowered]),
+                             bar_width, edgecolor='black', linewidth=3,
+                             color=cycle[j], label=result[0])
+        x += bar_width
 
     x = 0
 
-    for i, dataset in enumerate(['citeseer', 'cora']):
+    for i, dataset in enumerate(datasets_lowered):
         for j, result in enumerate(perf_results[dataset].items()):
             plt.text(x, 0.9 * plt.ylim()[1],
                      r'$%.3f\times$' % (float(result[1]) / float(perf_results[dataset]['DGL'])),
                      ha='center', backgroundcolor='white',
-                     rotation=45, fontsize=24,
+                     rotation=45, fontsize=15,
                      bbox=dict(boxstyle="round", fc='white', alpha=0.9, pad=0.2))
             x += bar_width
         x += 3
 
-    xticks = ((1, 7), ('CiteSeer', 'CORA'))
+    dgl_baseline_avg = np.average([float(perf_results[d]['DGL']) for d in datasets_lowered])
+
+    for j, result in enumerate(perf_results['citeseer'].items()):
+        plt.text(x, 0.9 * plt.ylim()[1],
+                 r'$%.3f\times$' % (np.average([float(perf_results[d][result[0]]) for d in datasets_lowered]) / dgl_baseline_avg),
+                 ha='center', backgroundcolor='white',
+                 rotation=45, fontsize=15,
+                 bbox=dict(boxstyle="round", fc='white', alpha=0.9, pad=0.2))
+        x += bar_width
+
+    datasets.append('Average')
+
+    xticks = ((1, 7, 13, 19, 25), datasets)
     plt.xticks(*xticks)
     plt.ylabel(r"Latency$/$Iteration ($\mathrm{ms}$)")
 
