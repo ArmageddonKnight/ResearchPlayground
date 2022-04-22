@@ -217,7 +217,7 @@ def save_legend(handles, title, ncol=5, alphas=None):
 from collections import OrderedDict
 
 def test_perf():
-    fig = plt.figure(figsize=(12, 6))
+    fig = plt.figure(figsize=(10, 6))
     buffer = []
     num_measure_records = 0
 
@@ -242,6 +242,8 @@ def test_perf():
     datasets = ['CiteSeer', 'CORA', 'Pubmed', 'PPI']
     datasets_lowered = [d.lower() for d in datasets]
 
+    bar_gap = 1.5
+
     for i, dataset in enumerate(datasets_lowered):
         print(perf_results[dataset])
         for j, result in enumerate(perf_results[dataset].items()):
@@ -251,7 +253,7 @@ def test_perf():
             if i == 0:
                 legend_handles.append(bar_legend)
             x += bar_width
-        x += 3
+        x += bar_gap
     for j, result in enumerate(perf_results['citeseer'].items()):
         bar_legend = plt.bar(x, np.average([float(perf_results[d][result[0]]) for d in datasets_lowered]),
                              bar_width, edgecolor='black', linewidth=3,
@@ -268,7 +270,7 @@ def test_perf():
                      rotation=45, fontsize=20,
                      bbox=dict(boxstyle="round", fc='white', alpha=0.9, pad=0.2))
             x += bar_width
-        x += 3
+        x += bar_gap
 
     dgl_baseline_avg = np.average([float(perf_results[d]['DGL']) for d in datasets_lowered])
 
@@ -282,7 +284,8 @@ def test_perf():
 
     datasets.append('Average')
 
-    xticks = ((1, 7, 13, 19, 25), datasets)
+    xticks = ((1, 1 + bar_gap + 3, 1 + 2 * (bar_gap + 3), 1 + 3 * (bar_gap + 3),
+               1 + 4 * (bar_gap + 3)), datasets)
     plt.xticks(*xticks)
     plt.ylabel(r"Latency$/$Iteration ($\mathrm{ms}$)")
 
