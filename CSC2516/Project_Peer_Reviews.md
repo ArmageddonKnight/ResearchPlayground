@@ -32,3 +32,34 @@ Driver by open-source models and accessible compute resources, this paper presen
   - Please refer to the comments on 'Quality'.
 
 ## Overall Merits [8/10]
+
+
+# CNN Fine-tuned on Blurry Images Captures Blur Structure
+
+## Summary
+
+The paper studies how the CNNs derive the classification results and whether those results are affected by noisy images. By comparing between a naive classifier that is trained on clean images and an expert classifier that is trained on noisy images. The authors observe that the expert classifier tend to focus more on the object itself compared with the naive classifier and is also less affected by the noise.
+
+## Quality [8/10]
+  - The paper does not list any algorithms, equations, or theorems. However, the experiments are well formed and the methodology is clear. That being said, I have the following main concerns with the work:
+
+    - No large-scale evaluations.
+
+      The paper conducts preliminary experiments on two image classes: cats and dogs. However, to justify the impact of noisy images, the authors should include large-scale studies such as how noisy images could potentially affect the image classification accuracy on large datasets. Furthermore, I do not think that "the similarity of image categorization networks and human visual cortex" is persuasive enough as a motivation. As Professor Wang put it in class, modern neural networks are in fact quite different from human brains.
+
+    - Out-of-date models.
+
+      The paper uses AlexNet as the base model for naive and expert, which was published in 2012. As a model that is 10-years-old, AlexNet is quite out-dated now and is far from the state-of-the-art. The authors should consider replacing the base with a more recent network architecture such as ResNet, unless there is a strong reason for not doing so.
+
+  Based on the aforementioned weaknesses, I therefore give 8/10 on the quality of the paper and 8/10 on the significance. Despite those weaknesses, I personally do think that this is an exciting research direction and encourage the authors to move further.
+
+## Clarity [9/10]
+  - The paper is clearly written. However, I think that both the Abstract and the Introduction section should include key conclusions so as to be self-contained. This can also help highlight your key contributions. However, with the current writeup the Abstract stops at methodology and the Introduction stops at problem statement.
+
+## Originality [9/10]
+  - This is a novel contribution to my best knowledge. 
+
+## Significance [8/10]
+  - Please refer to the comments on 'Quality'.
+
+## Overall Merits [9/10]
