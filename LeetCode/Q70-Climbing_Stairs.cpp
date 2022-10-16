@@ -1,14 +1,18 @@
 #include <algorithm>
 #include <vector>
 
+#include "common_utilities.h"
+
 struct Solution {
   std::vector<std::vector<int>> solutions;
 
   void climbStairsHelper(const int n, const int current_pos,
                          std::vector<int> &current_trace) {
-    if (current_pos + 1 == n) {
-      current_trace.push_back(1);
+    if (current_pos == n) {
       solutions.push_back(current_trace);
+      LOG(INFO) << "Pushing solution=" << current_trace;
+      return;
+    } else if (current_pos > n) {
       return;
     }
     current_trace.push_back(1);
@@ -30,6 +34,6 @@ struct Solution {
 int main() {
   Solution s;
 
-  s.climbStairs(3);
+  s.climbStairs(10);
   return 0;
 }

@@ -1,0 +1,3 @@
+[submodule "LeetCode/dmlc-core"]
+	path = LeetCode/dmlc-core
+	url = https://github.com/dmlc/dmlc-core
