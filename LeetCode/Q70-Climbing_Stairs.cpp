@@ -29,6 +29,12 @@ struct Solution {
     climbStairsHelper(n, 0, current_trace);
     return solutions;
   }
+
+  // https://leetcode.com/problems/climbing-stairs/discuss/2691420/100-faster-Solution-oror-Without-DP
+  // Reference Answer Key Ideas:
+  // - The fact that n is limited within 1 <= n <= 45, and only the NUMBER of
+  //   solutions is required.
+  // - Use dynamic programming and a bottom-up approach.
 };
 
 int main() {
