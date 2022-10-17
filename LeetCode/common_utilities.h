@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <unordered_map>
 
 #include <dmlc/logging.h>
@@ -27,3 +28,17 @@ inline std::ostream &operator<<(std::ostream &out,
   out << strout.str();
   return out;
 }
+
+template <typename T, const int TNumChildren> struct Node {
+  T content;
+  std::shared_ptr<Node> children[TNumChildren] = {nullptr};
+};
+
+template <typename T>
+using ListNode = Node<T, 1>;
+
+template <typename T>
+using ListNodePtr = std::shared_ptr<ListNode<T>>;
+
+template <typename T>
+using BinaryTreeNode = Node<T, 2>;
