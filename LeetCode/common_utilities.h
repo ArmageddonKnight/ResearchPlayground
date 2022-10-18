@@ -30,7 +30,7 @@ inline std::ostream &operator<<(std::ostream &out,
   return out;
 }
 
-template <typename T, const int TNumChildren> struct Node {
+template <typename T, int TNumChildren> struct Node {
   T content;
   std::shared_ptr<Node> children[TNumChildren] = {nullptr};
 };
@@ -38,6 +38,11 @@ template <typename T, const int TNumChildren> struct Node {
 /******************************************************************************
  * Linked List
  ******************************************************************************/
+
+template <typename T> struct Node<T, 1> {
+  T content;
+  std::shared_ptr<Node> children = nullptr;
+};
 
 template <typename T> using ListNode = Node<T, 1>;
 
@@ -58,7 +63,7 @@ template <typename T> struct List {
       root = tail = node_ptr;
       return;
     }
-    (tail->children)[0] = node_ptr;
+    tail->children = node_ptr;
     tail = node_ptr;
   }
   ListNodePtr<T> root = nullptr, tail = nullptr;
@@ -68,7 +73,7 @@ template <typename T>
 std::ostream &operator<<(std::ostream &out, const List<T> &list) {
   out << "[";
   for (auto node_ptr = list.root; node_ptr != nullptr;
-       node_ptr = (node_ptr->children)[0]) {
+       node_ptr = node_ptr->children) {
     out << node_ptr->content << ", ";
   }
   out << "]";

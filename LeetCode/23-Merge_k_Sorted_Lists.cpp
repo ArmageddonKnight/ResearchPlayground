@@ -24,7 +24,7 @@ public:
                         std::greater<ListNodePtr<int>>>
         heap;
     for (auto node_ptr = lists.root; node_ptr != nullptr;
-         node_ptr = (node_ptr->children)[0]) {
+         node_ptr = node_ptr->children) {
       heap.push(node_ptr->content.root);
     }
 
@@ -36,8 +36,8 @@ public:
       ret.append(heap_top->content);
       heap.pop();
 
-      if ((heap_top->children)[0] != nullptr) {
-        heap.push((heap_top->children)[0]);
+      if (heap_top->children != nullptr) {
+        heap.push(heap_top->children);
       }
     }
     return ret;

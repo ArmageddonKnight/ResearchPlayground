@@ -1,7 +1,7 @@
 # TODO Lists
 
 1. 递归: 70 :heavy_check_mark:, 112 :heavy_check_mark:, 509 :heavy_check_mark:
-1. 分治: 23, 169, 240
+1. 分治: 23 :heavy_check_mark:, 169 :heavy_check_mark:, 240
 1. 单调栈: 84, 85, 739, 503
 1. 并查集: 547, 200, 684
 1. 滑动窗口: 209, 3, 1004, 1208
