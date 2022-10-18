@@ -1,27 +1,54 @@
-#include <initializer_list>
+#include <functional>
+#include <queue>
 
 #include "common_utilities.h"
 
-template <typename T> struct List {
-  List(std::initializer_list<T> init_list) {
-    ListNode<T> node{.content = *init_list.begin(), .children = {nullptr}};
-    root = std::make_shared<ListNode<T>>(node);
-    // for (auto iter = init_list.begin(); iter != init_list.end(); ++iter) {
-    //   auto iter_copy = iter;
-    //   if ((++iter_copy) == init_list.end()) {
+namespace std {
 
-    //   } else {
-    //     root = std::make_shared(new ListNode{*iter, {root}});
-    //   }
-    // }
+template<>
+struct greater<ListNodePtr<int>> {
+  bool operator()(const ListNodePtr<int>& lhs, const ListNodePtr<int>& rhs) {
+    return lhs->content > rhs->content;
   }
-  ListNodePtr<T> root;
+};
+
+}
+
+class Solution {
+public:
+  List<int> mergeKLists(const List<List<int>> &lists) {
+
+    // Idea: Main a HEAP data structure, and retrieve the smallest element one
+    // at a time.
+    std::priority_queue<ListNodePtr<int>, std::vector<ListNodePtr<int>>,
+                        std::greater<ListNodePtr<int>>>
+        heap;
+    for (auto node_ptr = lists.root; node_ptr != nullptr;
+         node_ptr = (node_ptr->children)[0]) {
+      heap.push(node_ptr->content.root);
+    }
+
+    List<int> ret;
+    ListNodePtr<int> heap_top = nullptr;
+
+    while (!heap.empty()) {
+      heap_top = heap.top();
+      ret.append(heap_top->content);
+      heap.pop();
+
+      if ((heap_top->children)[0] != nullptr) {
+        heap.push((heap_top->children)[0]);
+      }
+    }
+    return ret;
+  }
 };
 
 int main() {
-  List list{1, 2, 3, 4};
+  List<List<int>> list{{1, 4, 5}, {1, 3, 4}, {2, 6}};
 
-  LOG(INFO) << list.root->content;
+  LOG(INFO) << list;
+  LOG(INFO) << Solution().mergeKLists(list);
 
   return 0;
 }

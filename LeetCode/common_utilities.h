@@ -1,3 +1,4 @@
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <unordered_map>
@@ -34,11 +35,44 @@ template <typename T, const int TNumChildren> struct Node {
   std::shared_ptr<Node> children[TNumChildren] = {nullptr};
 };
 
-template <typename T>
-using ListNode = Node<T, 1>;
+/******************************************************************************
+ * Linked List
+ ******************************************************************************/
+
+template <typename T> using ListNode = Node<T, 1>;
+
+template <typename T> using ListNodePtr = std::shared_ptr<ListNode<T>>;
+
+template <typename T> struct List {
+  List() = default;
+  List(std::initializer_list<T> init_list) {
+    for (auto iter = init_list.begin(); iter != init_list.end(); ++iter) {
+      append(*iter);
+    }
+  }
+  void append(const T &item) {
+    ListNode<T> node{.content = item};
+    ListNodePtr<T> node_ptr = std::make_shared<ListNode<T>>(node);
+
+    if (!root) {
+      root = tail = node_ptr;
+      return;
+    }
+    (tail->children)[0] = node_ptr;
+    tail = node_ptr;
+  }
+  ListNodePtr<T> root = nullptr, tail = nullptr;
+};
 
 template <typename T>
-using ListNodePtr = std::shared_ptr<ListNode<T>>;
+std::ostream &operator<<(std::ostream &out, const List<T> &list) {
+  out << "[";
+  for (auto node_ptr = list.root; node_ptr != nullptr;
+       node_ptr = (node_ptr->children)[0]) {
+    out << node_ptr->content << ", ";
+  }
+  out << "]";
+  return out;
+}
 
-template <typename T>
-using BinaryTreeNode = Node<T, 2>;
+template <typename T> using BinaryTreeNode = Node<T, 2>;
