@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-ALL_SRCS := $(wildcard *.cpp)
+ALL_SRCS := $(wildcard **/*.cpp)
 ALL_EXES := $(ALL_SRCS:.cpp=.exe)
 
 CXXFLAGS := -Wall -I./dmlc-core/include
@@ -11,4 +11,4 @@ all: $(ALL_EXES)
 	$(CXX) $(CXXFLAGS) $< -o $@ 
 
 clean:
-	$(RM) *.exe
+	find . -name "*.exe" | xargs $(RM)

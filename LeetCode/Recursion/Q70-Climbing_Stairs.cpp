@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "common_utilities.h"
+#include "../common_utilities.h"
 
 struct Solution {
   std::vector<std::vector<int>> solutions;

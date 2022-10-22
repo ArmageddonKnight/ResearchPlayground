@@ -1,4 +1,4 @@
-#include "common_utilities.h"
+#include "../common_utilities.h"
 
 template <typename T = int> struct TreeNode {
   T content;
