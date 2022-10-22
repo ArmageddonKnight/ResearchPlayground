@@ -18,8 +18,10 @@ class Solution {
 public:
   List<int> mergeKLists(const List<List<int>> &lists) {
 
-    // Idea: Main a HEAP data structure, and retrieve the smallest element one
-    // at a time.
+    // Key Ideas:
+    //
+    // - Main a HEAP data structure (i.e., priority_queue), and retrieve the
+    //   smallest element one at a time.
     std::priority_queue<ListNodePtr<int>, std::vector<ListNodePtr<int>>,
                         std::greater<ListNodePtr<int>>>
         heap;

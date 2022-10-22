@@ -9,6 +9,7 @@ private:
   std::vector<int> nextSmallerElementIndex(const std::vector<int> &heights) {
     std::stack<int> lt_curr_indices;
     std::vector<int> ret(heights.size());
+
     lt_curr_indices.push(heights.size());
 
     for (int i = heights.size() - 1; i >= 0; --i) {
@@ -26,6 +27,7 @@ private:
   std::vector<int> prevSmallerElementIndex(const std::vector<int> &heights) {
     std::stack<int> lt_curr_indices;
     std::vector<int> ret(heights.size());
+
     lt_curr_indices.push(-1);
 
     for (int i = 0; i < static_cast<int>(heights.size()); ++i) {
@@ -43,9 +45,10 @@ private:
 public:
   int largestRectangleArea(const std::vector<int> &heights) {
     int n = heights.size();
-    // Storing next and previous smaller element index
-    const std::vector<int> next = nextSmallerElementIndex(heights),
-                           prev = prevSmallerElementIndex(heights);
+    // Key Idea: Storing previous and the next index that is smaller than the
+    // current one. This is done by popping a monotonic stack, hence 
+    const std::vector<int> prev = prevSmallerElementIndex(heights),
+                           next = nextSmallerElementIndex(heights);
 
     LOG(INFO) << "next=" << next << ", prev=" << prev;
 
@@ -59,6 +62,7 @@ public:
 
 int main() {
   LOG(INFO) << Solution().largestRectangleArea({2, 1, 5, 6, 2, 3});
+  LOG(INFO) << Solution().largestRectangleArea({1, 1, 5, 1});
 
   return 0;
 }
