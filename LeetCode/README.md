@@ -2,7 +2,7 @@
 
 1. 递归: 70 :heavy_check_mark:, 112 :heavy_check_mark:, 509 :heavy_check_mark:
 1. 分治: 23 :heavy_check_mark:, 169 :heavy_check_mark:, 240 :heavy_check_mark:
-1. 单调栈: 84 :heavy_check_mark:, 85 :heavy_check_mark:, 739, 503
+1. 单调栈: 84 :heavy_check_mark:, 85 :heavy_check_mark:, 739 :heavy_check_mark:, 503 :heavy_check_mark:
 1. 并查集: 547, 200, 684
 1. 滑动窗口: 209, 3, 1004, 1208
 1. 前缀和: 724, 560, 437, 1248
