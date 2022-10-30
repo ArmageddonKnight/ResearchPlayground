@@ -5,9 +5,9 @@
 1. 单调栈: 84 :heavy_check_mark:, 85 :heavy_check_mark:, 739 :heavy_check_mark:, 503 :heavy_check_mark:
 1. 并查集: 547 :heavy_check_mark:, 200, 684
 1. 滑动窗口: 209 :heavy_check_mark:, 3, 1004, 1208
-1. 前缀和: 724, 560, 437, 1248
+1. 前缀和: 724 :heavy_check_mark:, 560, 437, 1248
 1. 差分: 1094 :heavy_check_mark:, 121, 122
-1. 拓扑排序: 210
+1. 拓扑排序: 210 :heavy_check_mark:
 1. 字符串: 5, 20, 43, 93
 1. 二分查找: 33, 34
 1. BFS: 127, 139, 130, 529, 815
