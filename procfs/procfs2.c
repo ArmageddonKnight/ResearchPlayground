@@ -3,11 +3,12 @@
  * https://stackoverflow.com/questions/29700466/create-proc-fs-dir-and-entry-under-a-already-existing-subdir-kernel-3-11-or-high
  */
 
+/*
 #include <asm/uaccess.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include <linux/slab.h>
 #include <linux/proc_fs.h>
+#include <linux/slab.h>
 
 #define C_PROC_BUFFER_MAX_SIZE 1024
 #define C_PROC_FILENAME "buffer1k"
@@ -94,8 +95,7 @@ int init_module() {
   my_proc_ops.proc_read = _proc_file_read;
   my_proc_ops.proc_write = _proc_file_write;
 
-  MyProcFile = proc_create(/*name=*/C_PROC_FILENAME, /*mode=*/0644,
-                           /*parent=*/NULL, /*proc_ops=*/&my_proc_ops);
+  MyProcFile = proc_create(C_PROC_FILENAME, 0644, NULL, my_proc_ops);
 
   if (MyProcFile == NULL) {
     remove_proc_entry(C_PROC_FILENAME, NULL);
@@ -115,3 +115,72 @@ void cleanup_module() {
 }
 
 MODULE_LICENSE("GPL");
+ */
+
+#include <asm/uaccess.h>
+#include <linux/init.h>
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/moduleparam.h>
+#include <linux/proc_fs.h>
+#define BUFSIZE 100
+
+MODULE_LICENSE("Dual BSD/GPL");
+MODULE_AUTHOR("Liran B.H");
+
+static struct proc_dir_entry *ent;
+
+static int irq = 20;
+module_param(irq, int, 0660);
+
+static int mode = 1;
+module_param(mode, int, 0660);
+
+static char buf[BUFSIZE];
+
+static ssize_t mywrite(struct file *file, const char __user *ubuf, size_t count,
+                       loff_t *ppos) {
+  int num, c, i, m;
+  if (*ppos > 0 || count > BUFSIZE)
+    return -EFAULT;
+  if (copy_from_user(buf, ubuf, count))
+    return -EFAULT;
+  num = sscanf(buf, "%d %d", &i, &m);
+  if (num != 2)
+    return -EFAULT;
+  irq = i;
+  mode = m;
+  c = strlen(buf);
+  *ppos = c;
+  return c;
+}
+
+static ssize_t myread(struct file *file, char __user *ubuf, size_t count,
+                      loff_t *ppos) {
+  int len = 0;
+  printk(KERN_DEBUG "read handler\n");
+  if (*ppos > 0 || count < BUFSIZE)
+    return 0;
+  len += sprintf(buf, "irq = %d\n", irq);
+  len += sprintf(buf + len, "mode = %d\n", mode);
+
+  if (copy_to_user(ubuf, buf, len))
+    return -EFAULT;
+  *ppos = len;
+  return len;
+}
+
+static struct proc_ops myops = {
+    .proc_read = myread,
+    .proc_write = mywrite,
+};
+
+static int simple_init(void) {
+  ent = proc_create("mydev", 0660, NULL, &myops);
+  return 0;
+}
+
+static void simple_cleanup(void) { proc_remove(ent); }
+
+module_init(simple_init);
+module_exit(simple_cleanup);
