@@ -17,7 +17,7 @@ static ssize_t _proc_file_read(struct file *file2read, char *buffer,
                                size_t count, loff_t *offset) {
   int ret;
 
-  printk(KERN_INFO "Proc file read (/proc/" C_PROC_FILENAME ") called\n");
+  printk(KERN_INFO "Proc file write (/proc/" C_PROC_FILENAME ") called\n");
 
   if (*offset > 0) {
     ret = 0;
@@ -30,14 +30,18 @@ static ssize_t _proc_file_read(struct file *file2read, char *buffer,
 
 static ssize_t _proc_file_write(struct file *file2write, const char *buffer,
                                 size_t count, loff_t *offset) {
+  printk(KERN_INFO "Proc file write (/proc/" C_PROC_FILENAME ") called\n");
+
   MyProcBufferSize = count;
   if (MyProcBufferSize > C_PROC_BUFFER_MAX_SIZE) {
     MyProcBufferSize = C_PROC_BUFFER_MAX_SIZE;
   }
-
   if (copy_from_user(MyProcBuffer, buffer, C_PROC_BUFFER_MAX_SIZE)) {
     return -EFAULT;
   }
+
+  printk(KERN_INFO "Received msg=%s of len=%ld from the user space\n",
+         MyProcBuffer, MyProcBufferSize);
 
   return MyProcBufferSize;
 }
