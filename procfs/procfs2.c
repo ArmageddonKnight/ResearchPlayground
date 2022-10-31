@@ -2,7 +2,6 @@
  * https://linux.die.net/lkmpg/x769.html
  */
 
-#include <asm/uaccess.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/proc_fs.h>
@@ -14,13 +13,13 @@ static struct proc_dir_entry *MyProcFile;
 static char MyProcBuffer[C_PROC_BUFFER_MAX_SIZE];
 static unsigned long MyProcBufferSize = 0;
 
-static int _proc_file_read(char *buffer, char **buffer_location, off_t offset,
-                           int buffer_length, int *eof, void *data) {
+static ssize_t _proc_file_read(struct file *file2read, char *buffer,
+                               size_t count, loff_t *offset) {
   int ret;
 
   printk(KERN_INFO "Proc file read (/proc/" C_PROC_FILENAME ") called\n");
 
-  if (offset > 0) {
+  if (*offset > 0) {
     ret = 0;
   } else {
     memcpy(buffer, MyProcBuffer, MyProcBufferSize);
@@ -29,8 +28,8 @@ static int _proc_file_read(char *buffer, char **buffer_location, off_t offset,
   return ret;
 }
 
-static int _proc_file_write(struct file *file, const char *buffer,
-                            unsigned long count, void *data) {
+static ssize_t _proc_file_write(struct file *file2write, const char *buffer,
+                                size_t count, loff_t *offset) {
   MyProcBufferSize = count;
   if (MyProcBufferSize > C_PROC_BUFFER_MAX_SIZE) {
     MyProcBufferSize = C_PROC_BUFFER_MAX_SIZE;
@@ -44,28 +43,30 @@ static int _proc_file_write(struct file *file, const char *buffer,
 }
 
 int init_module() {
-  MyProcFile = create_proc_entry(C_PROC_FILENAME, 0644, NULL);
+
+  struct proc_ops my_proc_ops;
+  my_proc_ops.proc_read = _proc_file_read;
+  my_proc_ops.proc_write = _proc_file_write;
+
+  MyProcFile = proc_create(/*name=*/C_PROC_FILENAME, /*mode=*/0,
+                           /*parent=*/NULL, /*proc_ops=*/&my_proc_ops);
 
   if (MyProcFile == NULL) {
-    remove_proc_entry(C_PROC_FILENAME, &proc_root);
+    proc_remove(MyProcFile);
     printk(KERN_ALERT "Error: Could not initialize /proc/" C_PROC_FILENAME
                       "\n");
     return -ENOMEM;
   }
 
-  MyProcFile->read_proc = _proc_file_read;
-  MyProcFile->write_proc = _proc_file_write;
-  MyProcFile->owner = THIS_MODULE;
-  MyProcFile->mode = S_IFREG | S_IRUGO;
-  MyProcFile->uid = 0;
-  MyProcFile->gid = 0;
-  MyProcFile->size = 37;
+  proc_set_size(MyProcFile, 37);
 
   printk(KERN_INFO "/proc/" C_PROC_FILENAME " created\n");
   return 0;
 }
 
 void cleanup_module() {
-  remove_proc_entry(C_PROC_FILENAME, &proc_root);
+  proc_remove(MyProcFile);
   printk(KERN_INFO "/proc/" C_PROC_FILENAME " removed\n");
 }
+
+MODULE_LICENSE("GPL");

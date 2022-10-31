@@ -2,7 +2,15 @@
 build
 __pycache__
 *.pyc
+*.mod.c
+*.mod.o
 *.d
+*.o
+*.ko
+*.mod
+*.cmd
+*.symvers
+*.order
 
 # IDE
 .vscode
