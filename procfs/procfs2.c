@@ -62,7 +62,7 @@ int init_module() {
     return -ENOMEM;
   }
 
-  proc_set_size(MyProcFile, 37);
+  proc_set_size(MyProcFile, 1024);
 
   printk(KERN_INFO "/proc/" C_PROC_FILENAME " created\n");
   return 0;
