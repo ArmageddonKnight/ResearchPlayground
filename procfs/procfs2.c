@@ -56,7 +56,7 @@ int init_module() {
                            /*parent=*/NULL, /*proc_ops=*/&my_proc_ops);
 
   if (MyProcFile == NULL) {
-    proc_remove(MyProcFile);
+    remove_proc_entry(C_PROC_FILENAME, MyProcFile);
     printk(KERN_ALERT "Error: Could not initialize /proc/" C_PROC_FILENAME
                       "\n");
     return -ENOMEM;
@@ -69,7 +69,7 @@ int init_module() {
 }
 
 void cleanup_module() {
-  proc_remove(MyProcFile);
+  remove_proc_entry(C_PROC_FILENAME, MyProcFile);
   printk(KERN_INFO "/proc/" C_PROC_FILENAME " removed\n");
 }
 
