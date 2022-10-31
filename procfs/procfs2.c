@@ -24,7 +24,9 @@ static ssize_t _proc_file_read(struct file *file2read, char *buffer,
   if (count == 0) {
     return 0;
   }
-  copy_to_user(buffer, MyProcBuffer, count);
+  if (copy_to_user(buffer, MyProcBuffer, count)) {
+    return -EFAULT;
+  }
 
   printk(KERN_INFO "Obtained msg=%s of len=%ld from the kernel space\n", buffer,
          count);
