@@ -52,7 +52,7 @@ int init_module() {
   my_proc_ops.proc_read = _proc_file_read;
   my_proc_ops.proc_write = _proc_file_write;
 
-  MyProcFile = proc_create(/*name=*/C_PROC_FILENAME, /*mode=*/0,
+  MyProcFile = proc_create(/*name=*/C_PROC_FILENAME, /*mode=*/0644,
                            /*parent=*/NULL, /*proc_ops=*/&my_proc_ops);
 
   if (MyProcFile == NULL) {
