@@ -1,5 +1,6 @@
 /**
  * https://linux.die.net/lkmpg/x769.html
+ * https://stackoverflow.com/questions/29700466/create-proc-fs-dir-and-entry-under-a-already-existing-subdir-kernel-3-11-or-high
  */
 
 #include <linux/kernel.h>
@@ -15,17 +16,20 @@ static unsigned long MyProcBufferSize = 0;
 
 static ssize_t _proc_file_read(struct file *file2read, char *buffer,
                                size_t count, loff_t *offset) {
-  int ret;
+  printk(KERN_INFO "Proc file read (/proc/" C_PROC_FILENAME ") called\n");
 
-  printk(KERN_INFO "Proc file write (/proc/" C_PROC_FILENAME ") called\n");
-
-  if (*offset > 0) {
-    ret = 0;
-  } else {
-    memcpy(buffer, MyProcBuffer, MyProcBufferSize);
-    ret = MyProcBufferSize;
+  if (count > MyProcBufferSize) {
+    count = MyProcBufferSize;
   }
-  return ret;
+  if (count == 0) {
+    return 0;
+  }
+  copy_to_user(buffer, MyProcBuffer, count);
+
+  printk(KERN_INFO "Obtained msg=%s of len=%ld from the kernel space\n", buffer,
+         count);
+
+  return count;
 }
 
 static ssize_t _proc_file_write(struct file *file2write, const char *buffer,
@@ -61,9 +65,6 @@ int init_module() {
                       "\n");
     return -ENOMEM;
   }
-
-  proc_set_size(MyProcFile, 1024);
-
   printk(KERN_INFO "/proc/" C_PROC_FILENAME " created\n");
   return 0;
 }
