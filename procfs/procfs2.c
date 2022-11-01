@@ -72,7 +72,8 @@ _nv_capture_next_pma_alloc_proc_file_write(struct file *file2write,
              &NVCaptureNextPMAAllocMode) != 1) {
     return -EFAULT;
   }
-  if (NVCaptureNextPMAAllocMode >= kNVCaptureNextPMAAllocModeEnd) {
+  if (NVCaptureNextPMAAllocMode < kNVCaptureNextPMAAllocModeDefault ||
+      NVCaptureNextPMAAllocMode >= kNVCaptureNextPMAAllocModeEnd) {
     return -EFAULT;
   }
 
