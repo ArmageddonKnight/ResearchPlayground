@@ -1,6 +1,7 @@
 /**
  * https://linux.die.net/lkmpg/x769.html
  * https://stackoverflow.com/questions/29700466/create-proc-fs-dir-and-entry-under-a-already-existing-subdir-kernel-3-11-or-high
+ * https://devarea.com/linux-kernel-development-creating-a-proc-file-and-interfacing-with-user-space/#.Y2EyotKZPbY
  */
 
 #include <asm/uaccess.h>
@@ -17,8 +18,13 @@ static char NVCaptureNextPMAAllocIndKBuffer
     [C_NV_CAPTURE_NEXT_PMA_ALLOC_IND_PROC_BUFFER_MAX_SIZE];
 static unsigned long NVCaptureNextPMAAllocIndKBufferSize = 0;
 
-enum NVCaptureNextPMAAllocMode_t { kDefault = 0, kRecord = 1, kReplay = 2 };
-static int NVCaptureNextPMAAllocMode = kDefault;
+enum NVCaptureNextPMAAllocMode_t {
+  kNVCaptureNextPMAAllocModeDefault = 0,
+  kNVCaptureNextPMAAllocModeRecord = 1,
+  kNVCaptureNextPMAAllocModeReplay = 2,
+  kNVCaptureNextPMAAllocModeEnd = 3
+};
+static int NVCaptureNextPMAAllocMode = kNVCaptureNextPMAAllocModeDefault;
 
 static ssize_t _nv_capture_next_pma_alloc_proc_file_read(struct file *file2read,
                                                          char __user *ubuf,
@@ -28,12 +34,16 @@ static ssize_t _nv_capture_next_pma_alloc_proc_file_read(struct file *file2read,
 
   printk(KERN_INFO
          "Proc file read (/proc/" C_NV_CAPTURE_NEXT_PMA_ALLOC_IND_PROC_FILENAME
-         ") called\n");
+         ") called, with count=%ld and offset=%lld\n",
+         count, *offset);
+  // Since `count` is usually in the chunk of 128 KB, it is more than enough to
+  // satisfy the requirements.
   if (*offset > 0 || count < NVCaptureNextPMAAllocIndKBufferSize) {
     return 0;
   }
-  kbuf_len += sprintf(NVCaptureNextPMAAllocIndKBuffer, "mode = %d\n",
-                      NVCaptureNextPMAAllocMode);
+  kbuf_len +=
+      sprintf(NVCaptureNextPMAAllocIndKBuffer,
+              "NVCaptureNextPMAAllocMode = %d\n", NVCaptureNextPMAAllocMode);
   if (copy_to_user(ubuf, NVCaptureNextPMAAllocIndKBuffer, kbuf_len)) {
     return -EFAULT;
   }
@@ -47,7 +57,8 @@ _nv_capture_next_pma_alloc_proc_file_write(struct file *file2write,
                                            size_t count, loff_t *offset) {
   printk(KERN_INFO
          "Proc file write (/proc/" C_NV_CAPTURE_NEXT_PMA_ALLOC_IND_PROC_FILENAME
-         ") called\n");
+         ") called, with count=%ld and offset=%lld\n",
+         count, *offset);
 
   NVCaptureNextPMAAllocIndKBufferSize = count;
   if (*offset || count > C_NV_CAPTURE_NEXT_PMA_ALLOC_IND_PROC_BUFFER_MAX_SIZE) {
@@ -59,6 +70,9 @@ _nv_capture_next_pma_alloc_proc_file_write(struct file *file2write,
 
   if (sscanf(NVCaptureNextPMAAllocIndKBuffer, "%d",
              &NVCaptureNextPMAAllocMode) != 1) {
+    return -EFAULT;
+  }
+  if (NVCaptureNextPMAAllocMode >= kNVCaptureNextPMAAllocModeEnd) {
     return -EFAULT;
   }
 
