@@ -16,4 +16,4 @@ __pycache__
 # IDE
 .vscode
 
-scratchpad\.*
+Scratchpad/main.*
