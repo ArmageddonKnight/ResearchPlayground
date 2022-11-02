@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-all: scratchpad.exe
+all: main.exe
 
 %.exe : %.o
 	$(CXX) $< -o $@
