@@ -14,6 +14,7 @@ public:
 
 private:
   int robber(vector<int> &nums, int l, int r) {
+    // https://leetcode.com/problems/house-robber/discuss/156523/From-good-to-great.-How-to-approach-most-of-DP-problems.
     int pre = 0, cur = 0;
     for (int i = l; i <= r; i++) {
       int temp = max(pre + nums[i], cur);
