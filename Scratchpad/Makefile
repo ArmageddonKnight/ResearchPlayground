@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-all: main.exe
+all: Coding_Template.exe
 
 %.exe : %.o
 	$(CXX) $< -o $@
