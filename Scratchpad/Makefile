@@ -1,9 +1,14 @@
 .PHONY: all clean
 
-all: main.exe
+all: main.cpp.exe main.c.exe
 
-%.exe : %.o
-	$(CXX) $< -o $@
+LDFLAGS := -L/usr/lib/x86_64-linux-gnu/ -lpci
+
+%.cpp.exe : %.cpp
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
+
+%.c.exe : %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
 clean:
 	$(RM) *.exe
