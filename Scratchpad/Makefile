@@ -2,9 +2,9 @@
 
 CXXFLAGS := -I./quik_fix/include
 
-all: main.cpp.exe main.c.exe
+all: a.exe
 
-%.cpp.exe : %.cpp Makefile
+a.exe : main.cpp Makefile
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
 clean:
