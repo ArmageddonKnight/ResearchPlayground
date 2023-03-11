@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-CXXFLAGS := -rdynamic
+CXXFLAGS := -I./quik_fix/include
 
 all: main.cpp.exe main.c.exe
 
