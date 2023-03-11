@@ -6,6 +6,7 @@ __pycache__
 *.mod.o
 *.d
 *.o
+*.out
 *.ko
 *.exe
 *.mod

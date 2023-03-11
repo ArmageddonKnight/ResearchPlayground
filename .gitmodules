@@ -1,3 +1,6 @@
 [submodule "LeetCode/dmlc-core"]
 	path = LeetCode/dmlc-core
 	url = https://github.com/dmlc/dmlc-core
+[submodule "Scratchpad/quik_fix"]
+	path = Scratchpad/quik_fix
+	url = https://github.com/ArmageddonKnight/quik_fix
