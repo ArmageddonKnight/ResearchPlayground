@@ -87,3 +87,14 @@
     // if (dmlc::GetEnv("VERBOSE_CACHING_ALLOCATOR", 0)) {
     //   LOG(INFO) << new_alloc_ctx;
     // }
+
+    //     if (!taping_malloc && !using_taped_malloc) {
+    //   for (auto& tape : taped_alloc_params_with_block_copy) {
+    //     for (auto& kv : tape.second) {
+    //       if (kv.second.ptr == block->ptr) {
+    //         LOG(WARNING) << "Trying to free block->ptr=" << (&kv.second)
+    //                      << " from " << tape.first;
+    //       }
+    //     }
+    //   }
+    // }

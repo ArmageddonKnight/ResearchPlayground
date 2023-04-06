@@ -99,3 +99,56 @@
             os.environ["VERBOSE_CACHING_ALLOCATOR"] = "0"
         self.beam_scores = self.beam_scores.view(-1)
         return next_beam_tokens.view(-1), next_beam_indices.view(-1)
+
+
+            print(
+                f"ckpt #0 cur_len={cur_len}, outputs.past_key_values[1][0]={outputs.past_key_values[0][0][0, 0, :, :]}"
+            )
+            print(
+                f"ckpt #0 cur_len={cur_len}, outputs.past_key_values[1][0]={outputs.past_key_values[1][0][0, 0, :, :]}"
+            )
+            print(
+                f"ckpt #0 cur_len={cur_len}, outputs.past_key_values[1][0].data_ptr()={hex(outputs.past_key_values[1][0].data_ptr())}"
+            )
+            torch._C._lookupDataPtrInMemtape(
+                torch.cuda.current_device(),
+                graphed_beam_search_post_processor.mempool_id,
+                outputs.past_key_values[1][0].data_ptr(),
+            )
+
+            if cur_len == 1:
+                print("Checkpointing past_key_values")
+                print(outputs.past_key_values[0][0])
+                for past_idx, past_kv in enumerate(outputs.past_key_values):
+                    for vi, v in enumerate(past_kv):
+                        torch.save(v, f"past_key_value-{past_idx}-{vi}.pt")
+
+
+            if cur_len == 1:
+                print("Verifying past_key_values")
+                print(new_input_ids)
+                torch._C._lookupDataPtrInMemtape(
+                    torch.cuda.current_device(),
+                    graphed_beam_search_post_processor.mempool_id,
+                    new_input_ids.data_ptr()
+                )
+                print(f"new_input_ids.data_ptr()={hex(new_input_ids.data_ptr())}")
+                for past_idx, past_kv in enumerate(outputs.past_key_values):
+                    for vi, v in enumerate(past_kv):
+                        loaded = torch.load(f"past_key_value-{past_idx}-{vi}.pt")
+                        if not torch.allclose(v, loaded):
+                            print(f"{past_idx}, {vi}, v.data_ptr()={hex(v.data_ptr())} has changed")
+                            print(f"loaded.data_ptr()={hex(loaded.data_ptr())}-{hex(loaded.data_ptr() + loaded.nelement() * loaded.element_size())}")
+                            v = loaded
+
+            print(
+                f"ckpt #2 cur_len={cur_len}, outputs.past_key_values[1][0]={outputs.past_key_values[0][0][0, 0, :, :]}"
+            )
+            print(
+                f"ckpt #2 cur_len={cur_len}, outputs.past_key_values[1][0]={outputs.past_key_values[1][0][0, 0, :, :]}"
+            )
+            print(
+                f"ckpt #2 cur_len={cur_len}, outputs.past_key_values[1][0].data_ptr()={hex(outputs.past_key_values[1][0].data_ptr())}"
+            )
+
+            print("After entering: ", input_ids, negative(outputs.logits))
