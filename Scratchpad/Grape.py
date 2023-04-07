@@ -152,3 +152,62 @@
             )
 
             print("After entering: ", input_ids, negative(outputs.logits))
+
+
+        # # self.worst_score[0] = self._3f
+        # # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len < self._num_beams).bitwise_or(score > self.worst_score)):
+        # #     self.worst_score[0] = self._2f
+        # #     self.scoreboard[0] = self._3f
+
+        # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len < self._num_beams)):
+        #     # with G_GRAPE_GLOBAL_INDICATOR_STACK(self._true):
+        #     self.worst_score[0] = self._1f
+
+        # score = sum_logprobs / (hyp.shape[-1] ** self.length_penalty)
+
+        # # self.score_copy[0] = score
+
+        # # with G_GRAPE_GLOBAL_INDICATOR_STACK(self._true):
+        # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len < self._num_beams)):
+        #     # score = sum_logprobs / (hyp.shape[-1] ** self.length_penalty)
+        #     self.score_copy[0] = self._3f
+        #     # self.worst_score[0] = score
+
+        # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len > self._num_beams)):
+        #     # score = sum_logprobs / (hyp.shape[-1] ** self.length_penalty)
+        #     self.score_copy[1] = self._2f
+
+        # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len < self._num_beams)):
+        #     # score = sum_logprobs / (hyp.shape[-1] ** self.length_penalty)
+        #     self.score_copy[0] = self._3f
+
+        # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len < self._num_beams).bitwise_or(score > self.worst_score)):
+
+        #     self.score_copy[0] = self.score_copy[0] + self._1f
+
+        #     # self.len += self._1
+        #     len_gt_num_beams_add_one = self.len > (self._num_beams + self._1)
+        #     with G_GRAPE_GLOBAL_INDICATOR_STACK(len_gt_num_beams_add_one):
+        #         self.scoreboard[0] = score
+
+        #     #     self.scoreboard_items[0, : hyp.shape[-1]] = hyp
+        #     # with G_GRAPE_GLOBAL_INDICATOR_STACK(len_gt_num_beams_add_one.bitwise_not()):
+        #     #     self.scoreboard[-1] = score
+        #     #     self.scoreboard_items[-1, : hyp.shape[-1]] = hyp
+        #     # scoreboard_sort_res = torch.sort(self.scoreboard)
+        #     # self.scoreboard[:] = scoreboard_sort_res.values
+        #     # self.scoreboard_items[:, :] = torch.index_select(
+        #     #     self.scoreboard_items, dim=0, index=scoreboard_sort_res.indices
+        #     # )
+        #     len_gt_num_beams = self.len > self._num_beams
+        #     with G_GRAPE_GLOBAL_INDICATOR_STACK(len_gt_num_beams):
+        #         self.worst_score[0] = self._1f
+        #     with G_GRAPE_GLOBAL_INDICATOR_STACK(len_gt_num_beams.bitwise_not()):
+        #         self.worst_score[0] = self._1f # torch.min(self.worst_score[0], score)
+        #     self.worst_score[0] = self._3f
+        # # with G_GRAPE_GLOBAL_INDICATOR_STACK((self.len < self._num_beams).bitwise_or(score > self.worst_score)):
+        # #     self.worst_score[0] = self._2f
+        # #     self.scoreboard[0] = self._3f
+
+
+        
