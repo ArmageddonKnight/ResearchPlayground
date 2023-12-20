@@ -1,13 +1,19 @@
 name: CI
 on: [push]
 jobs:
-  ci_pipeline_init:
+  job1:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v3
-  ci_pipeline:
-    needs: [ci_pipeline_init]
+      - id: set-matrix
+        run: echo "matrix={\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}" >> $GITHUB_OUTPUT
+  job2:
+    needs: job1
     runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJSON(needs.job1.outputs.matrix) }}
     steps:
-      - run: python3 ci-pipeline-descriptor.py
-        id: generate_ci_pipeline
+      - run: |
+          echo "${{ matrix.project }}"
+          echo "${{ matrix.config }}"
