@@ -1,8 +1,13 @@
 name: CI
 on: [push]
 jobs:
-  ci_pipeline:
+  ci_pipeline_init:
     runs-on: ubuntu-latest
     steps:
-    - name: Step 1
-      run: python3 --version
+      - uses: actions/checkout@v3
+  ci_pipeline:
+    needs: [ci_pipeline_init]
+    runs-on: ubuntu-latest
+    steps:
+      - run: python3 ci-pipeline-descriptor.py
+        id: generate_ci_pipeline
