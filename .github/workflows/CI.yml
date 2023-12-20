@@ -1,0 +1,8 @@
+name: CI
+on: [push]
+jobs:
+  ci_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Step 1
+      run: python3 --version
