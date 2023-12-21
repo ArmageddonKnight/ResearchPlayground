@@ -1,0 +1,18 @@
+name: MyAction
+description: Happy happy
+inputs:
+  flag:
+    description: Happy
+    required: true
+    default: ${{ false }}
+runs:
+  using: composite
+  steps:
+    - name: Run 1
+      if: ${{ inputs.flag == ${{ false }} }}
+      shell: bash
+      run: echo "123"
+    - name: Run 2
+      if: ${{ inputs.flag == ${{ true }} }}
+      shell: bash
+      run: echo "456"

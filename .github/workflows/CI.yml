@@ -19,3 +19,9 @@ jobs:
       - run: |
           echo "${{ matrix.project }}"
           echo "${{ matrix.config }}"
+      - uses: .github/actions/myaction
+        with:
+          flag: false
+      - uses: .github/actions/myaction
+        with:
+          flag: true
