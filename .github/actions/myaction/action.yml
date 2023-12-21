@@ -10,7 +10,12 @@ runs:
   steps:
     - name: Run
       shell: bash
-      run: echo ${{ inputs.flag }}
+      run: |
+        echo ${{ inputs.flag }}
+        echo ${{ inputs.flag == true }}
+        echo ${{ inputs.flag == false }}
+        echo ${{ inputs.flag == 0 }}
+        echo ${{ inputs.flag == 1 }}
     - name: Run 1
       if: ${{ inputs.flag == true }}
       shell: bash
