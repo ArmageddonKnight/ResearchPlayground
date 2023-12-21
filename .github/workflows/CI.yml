@@ -20,9 +20,9 @@ jobs:
           echo "${{ matrix.project }}"
           echo "${{ matrix.config }}"
       - uses: actions/checkout@v4
-      - uses: .github/actions/myaction
+      - uses: ./.github/actions/myaction
         with:
           flag: false
-      - uses: .github/actions/myaction
+      - uses: ./.github/actions/myaction
         with:
           flag: true
