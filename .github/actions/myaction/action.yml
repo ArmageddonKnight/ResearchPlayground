@@ -12,10 +12,10 @@ runs:
       shell: bash
       run: echo ${{ inputs.flag }}
     - name: Run 1
-      if: ${{ inputs.flag }}
+      if: ${{ inputs.flag == true }}
       shell: bash
       run: echo "123"
     - name: Run 2
-      if: ${{ !inputs.flag }}
+      if: ${{ inputs.flag == false }}
       shell: bash
       run: echo "456"
