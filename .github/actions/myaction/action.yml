@@ -24,3 +24,9 @@ runs:
       if: ${{ inputs.flag == false }}
       shell: bash
       run: echo "456"
+    - name: Run 3
+      shell: bash
+      run: export ABC="123"
+    - name: Run 4
+      shell: bash
+      run: echo $ABC
