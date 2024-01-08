@@ -16,14 +16,6 @@ runs:
         echo ${{ inputs.flag == 'false' }}
         echo ${{ inputs.flag == 0 }}
         echo ${{ inputs.flag == 1 }}
-    - name: Run 1
-      if: ${{ inputs.flag == true }}
-      shell: bash
-      run: echo "123"
-    - name: Run 2
-      if: ${{ inputs.flag == false }}
-      shell: bash
-      run: echo "456"
     - name: Run 3
       shell: bash
       run: export ABC="123"
