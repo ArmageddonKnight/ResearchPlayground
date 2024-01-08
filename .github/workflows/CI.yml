@@ -1,27 +1,9 @@
 name: CI
 on: [push]
 jobs:
-  job1:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix-resnet: ${{ steps.set-matrix-resnet.outputs.matrix }}
-      matrix-dcgan: ${{ steps.set-matrix.dcgan.outputs.matrix }}
-    steps:
-      - id: set_matrix_resnet
-        run: echo "matrix=[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]" >> $GITHUB_OUTPUT
-      - id: set_matrix_dcgan
-        run: echo "matrix=[{\"project\":\"foo\",\"config\":\"Debug\"}]" >> $GITHUB_OUTPUT
   job2:
-    needs: job1
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        # target_global_batch_size: [1024]
-        include: ${{ fromJSON(needs.job1.outputs.matrix) }}
     steps:
-      - run: |
-          echo "${{ matrix.project }}"
-          echo "${{ matrix.config }}"
       - uses: actions/checkout@v4
       - uses: ./.github/actions/myaction
         with:
