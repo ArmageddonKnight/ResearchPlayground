@@ -21,4 +21,6 @@ runs:
       run: export ABC="123"
     - name: Run 4
       shell: bash
-      run: echo $ABC
+      run: |
+        export ABC="456"
+        echo $ABC
