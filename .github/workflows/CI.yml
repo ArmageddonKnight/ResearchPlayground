@@ -8,6 +8,10 @@ jobs:
       - run: |
           echo ${{ secrets.MY_SECRET }} > tmp.log
           cat tmp.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifact
+          path: tmp.log
       - uses: ./.github/actions/myaction
         with:
           flag: false
