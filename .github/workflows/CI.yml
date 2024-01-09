@@ -5,7 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo  ${{ secrets.MY_SECRET }}
+      - run: |
+          echo ${{ secrets.MY_SECRET }} > tmp.log
+          cat tmp.log
       - uses: ./.github/actions/myaction
         with:
           flag: false
