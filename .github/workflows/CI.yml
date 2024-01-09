@@ -5,6 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - run: echo  ${{ secrets.MY_SECRET }}
       - uses: ./.github/actions/myaction
         with:
           flag: false
