@@ -1,18 +1,10 @@
 name: CI
 on: [push]
 jobs:
-  job2:
-    runs-on: ubuntu-latest
+  myjob:
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - run: echo "${{ secrets.MY_SECRET }}" > tmp.log
-      - uses: actions/upload-artifact@v4
+      - uses: actions/setup-python@v5
         with:
-          name: artifact
-          path: tmp.log
-      - uses: ./.github/actions/myaction
-        with:
-          flag: false
-      - uses: ./.github/actions/myaction
-        with:
-          flag: true
+          python-version: 3.10
