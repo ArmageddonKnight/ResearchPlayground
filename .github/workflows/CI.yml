@@ -27,4 +27,6 @@ jobs:
     steps:
       - run: |
           echo ${{ needs.myjob.outputs.output1 }}
+          echo ${{ needs.myjob.outputs.output1 == 1 }}
+          echo ${{ needs.myjob.outputs.output1 == '1' }}
           echo ${{ needs.myjob.outputs.output2 }}
