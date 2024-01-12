@@ -25,6 +25,13 @@ jobs:
     needs: [myjob]
     if: ${{ always() }}
     steps:
+      - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
+      - run: |
+          touch run.sh
+          chmod +x run.sh
+      - run: |
+          echo ${PATH}
+          which run.sh
       - run: |
           echo ${{ needs.myjob.outputs.output1 }}
           echo ${{ needs.myjob.outputs.output1 == 1 }}
