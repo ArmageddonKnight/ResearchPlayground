@@ -37,3 +37,4 @@ jobs:
           echo ${{ needs.myjob.outputs.output1 == 1 }}
           echo ${{ needs.myjob.outputs.output1 == '1' }}
           echo ${{ needs.myjob.outputs.output2 }}
+      - uses: ./.github/actions/action1

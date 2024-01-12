@@ -1,0 +1,11 @@
+name: Action1
+description: Action1
+inputs:
+  some-input:
+    description: Some input.
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: echo ${{ inputs.some-input }}
