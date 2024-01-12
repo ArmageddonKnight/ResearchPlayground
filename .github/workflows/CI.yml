@@ -12,3 +12,19 @@ jobs:
           python --version
           python -V
           which python
+      - uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS_JSON }}
+      - name: Install GCSFuse
+        run: |
+          export GCSFUSE_REPO=gcsfuse-$(lsb_release -c -s)
+          echo "deb [signed-by=/usr/share/keyrings/cloud.google.asc] https://packages.cloud.google.com/apt $GCSFUSE_REPO main" \
+            | sudo tee /etc/apt/sources.list.d/gcsfuse.list
+          curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo tee /usr/share/keyrings/cloud.google.asc
+      - name: Set up GCSFuse
+        run: |
+          sudo apt-get update
+          sudo apt-get install gcsfuse
+      - name: Mount datasets
+        run: |
+          gcsfuse pi-datasets /mnt/pi-datasets
