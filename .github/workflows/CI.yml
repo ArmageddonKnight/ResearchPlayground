@@ -25,16 +25,16 @@ jobs:
     needs: [myjob]
     if: ${{ always() }}
     steps:
+      - uses: ./.github/actions/action2
       - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
       - run: |
           touch run.sh
           chmod +x run.sh
       - run: |
           echo ${PATH}
-          which run.sh
+          ./run.sh
       - run: |
           echo ${{ needs.myjob.outputs.output1 }}
           echo ${{ needs.myjob.outputs.output1 == 1 }}
           echo ${{ needs.myjob.outputs.output1 == '1' }}
           echo ${{ needs.myjob.outputs.output2 }}
-      - uses: ./.github/actions/action1
