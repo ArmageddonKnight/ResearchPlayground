@@ -25,7 +25,11 @@ jobs:
     needs: [myjob]
     if: ${{ always() }}
     steps:
-      - uses: actions/checkout@v4
+      - name: >-
+          output1=${{ needs.myjob.outputs.output1
+          }}, output2=${{
+          needs.myjob.outputs.output2 }}
+        uses: actions/checkout@v4
       - uses: ./.github/actions/action2
       - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
       - run: |
