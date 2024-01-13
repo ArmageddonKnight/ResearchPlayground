@@ -8,6 +8,16 @@ jobs:
       output2: ${{ steps.step2.outputs.test }}
     steps:
       - uses: actions/checkout@v4
+      - id: mystep
+        run: |
+          echo "123456" >> tmp.log
+          cat tmp.log
+          cat <<EOF > ${GITHUB_OUTPUT}
+          var1=123
+          var2=234
+      - run: |
+          echo ${{ steps.mystep.outputs.var1 }}
+          echo ${{ steps.mystep.outputs.var2 }}
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12
