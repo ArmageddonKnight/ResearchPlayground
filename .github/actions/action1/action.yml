@@ -9,4 +9,7 @@ runs:
   steps:
     - shell: python
       run: |
+        print("${{ inputs.some-input }}")
+    - shell: python
+      run: |
         print(${{ inputs.some-input }})

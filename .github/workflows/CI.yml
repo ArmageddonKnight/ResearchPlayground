@@ -43,7 +43,10 @@ jobs:
         uses: actions/checkout@v4
       - uses: ./.github/actions/action1
         with:
-          some-input: 123
+          some-input: something
+      - uses: ./.github/actions/action1
+        with:
+          some-input: "something"
       - uses: ./.github/actions/action2
       - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
       - run: |
