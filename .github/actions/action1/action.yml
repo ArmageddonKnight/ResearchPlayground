@@ -7,5 +7,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - shell: bash
-      run: echo ${{ inputs.some-input }}
+    - shell: python
+      run: |
+        print(${{ inputs.some-input }})

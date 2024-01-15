@@ -15,6 +15,7 @@ jobs:
           cat <<EOF > ${GITHUB_OUTPUT}
           var1=123
           var2=234
+          EOF
       - run: |
           echo ${{ steps.mystep.outputs.var1 }}
           echo ${{ steps.mystep.outputs.var2 }}
@@ -40,6 +41,9 @@ jobs:
           }}, output2=${{
           needs.myjob.outputs.output2 }}
         uses: actions/checkout@v4
+      - uses: ./.github/actions/action1
+        with:
+          some-input: 123
       - uses: ./.github/actions/action2
       - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
       - run: |
