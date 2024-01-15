@@ -34,7 +34,7 @@ jobs:
   myjob2:
     runs-on: ubuntu-latest
     needs: [myjob]
-    if: ${{ always() && needs.myjob.outputs.output1 }}
+    if: ${{ always() && needs.myjob.outputs.output1 == 2 }}
     steps:
       - name: >-
           output1=${{ needs.myjob.outputs.output1
