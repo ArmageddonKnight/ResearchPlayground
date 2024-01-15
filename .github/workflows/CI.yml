@@ -49,9 +49,10 @@ jobs:
         continue-on-error: true
         with:
           some-input: "something"
-      - run: |
-          echo ${{ success() }}
-          echo ${{ failure() }}
+      - if: ${{ success() }}
+        run: echo "success"
+      - if: ${{ failure() }}
+        run: echo "failure"
       - uses: ./.github/actions/action2
       - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
       - run: |
