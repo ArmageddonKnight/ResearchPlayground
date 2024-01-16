@@ -10,6 +10,7 @@ runs:
     - shell: bash
       run: |
         echo ${{ github.sha }}
+        echo ${{ secrets.GCP_CREDENTIALS_JSON }}
     - shell: python
       run: |
         print("${{ inputs.some-input }}")
