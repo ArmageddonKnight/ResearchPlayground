@@ -7,6 +7,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - shell: bash
+      run: |
+        echo ${{ github.sha }}
     - shell: python
       run: |
         print("${{ inputs.some-input }}")
