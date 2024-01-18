@@ -3,10 +3,12 @@ description: Action1
 inputs:
   some-input:
     description: Some input.
-    required: true
 runs:
   using: composite
   steps:
+    - shell: bash
+      if: ${{ inputs.some-input == '' }}
+      run: echo "123"
     - shell: bash
       run: |
         echo ${{ github.sha }}
