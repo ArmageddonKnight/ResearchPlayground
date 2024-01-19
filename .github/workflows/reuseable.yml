@@ -7,7 +7,7 @@ jobs:
   myjob:
     runs-on: ubuntu-latest
     outputs:
-      myouypuy: ${{ jobs.mystep.outputs.myouypuy }}
+      myouypuy: ${{ steps.mystep.outputs.myouypuy }}
     steps:
       - run: echo "123456"
       - id: mystep
