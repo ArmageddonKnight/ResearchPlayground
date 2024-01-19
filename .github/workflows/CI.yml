@@ -1,6 +1,8 @@
 name: CI
 on: [push]
 jobs:
+  myjob0:
+    uses: ./.github/workflows/reuseable.yml
   myjob:
     runs-on: ubuntu-latest
     outputs:
