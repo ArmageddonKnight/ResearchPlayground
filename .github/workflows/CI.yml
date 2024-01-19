@@ -5,11 +5,13 @@ jobs:
     uses: ./.github/workflows/reuseable.yml
   myjob:
     runs-on: ubuntu-latest
+    needs: myjob0
     outputs:
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
     steps:
       - uses: actions/checkout@v4
+      - run: echo ${{ needs.myjob0.outputs.myouypuy }}
       - id: mystep
         run: |
           echo "123456" >> tmp.log
