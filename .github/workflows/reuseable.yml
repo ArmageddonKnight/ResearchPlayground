@@ -2,7 +2,8 @@ name: CI
 on:
   workflow_call:
     outputs:
-      myouypuy: ${{ jobs.myjob.outputs.myouypuy }}
+      myouypuy:
+        value: ${{ jobs.myjob.outputs.myouypuy }}
 jobs:
   myjob:
     runs-on: ubuntu-latest
