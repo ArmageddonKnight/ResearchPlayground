@@ -19,16 +19,6 @@ jobs:
       - run: |
           echo ${{ steps.mystep.outputs.var1 }}
           echo ${{ steps.mystep.outputs.var2 }}
-      - id: mystep
-        run: |
-          echo "123456" >> tmp.log
-          cat tmp.log
-          cat <<EOF > ${GITHUB_OUTPUT}
-          var1=123
-          var2=2
-      - run: |
-          echo ${{ steps.mystep.outputs.var1 }}
-          echo ${{ steps.mystep.outputs.var2 }}
       - uses: actions/setup-python@v5
         with:
           python-version: 3.12
@@ -46,6 +36,16 @@ jobs:
     needs: [myjob]
     if: ${{ always() && needs.myjob.outputs.output1 == 1 }}
     steps:
+      - id: mystep
+        run: |
+          echo "123456" >> tmp.log
+          cat tmp.log
+          cat <<EOF > ${GITHUB_OUTPUT}
+          var1=123
+          var2=2
+      - run: |
+          echo ${{ steps.mystep.outputs.var1 }}
+          echo ${{ steps.mystep.outputs.var2 }}
       - name: >-
           output1=${{ needs.myjob.outputs.output1
           }}, output2=${{
