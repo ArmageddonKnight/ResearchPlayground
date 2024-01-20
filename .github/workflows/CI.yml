@@ -22,8 +22,10 @@ jobs:
       output2: ${{ steps.step2.outputs.test }}
     steps:
       - uses: actions/checkout@v4
+      - run: echo ${{ needs.myjob0.inputs.myinpuy }}
       - run: echo ${{ needs.myjob0.outputs.myouypuy }}
       - run: echo ${{ needs.myjob0.outputs.myouypuy2 }}
+      - run: echo "==================================="
       - id: mystep
         run: |
           echo "123456" >> tmp.log
