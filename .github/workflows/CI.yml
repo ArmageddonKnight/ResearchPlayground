@@ -7,6 +7,8 @@ jobs:
       instance-name: pi-4xl4-${{ github.sha }}
       pulumi-work-dir: ./.github/actions/pulumi/gcp_4xL4
       github-actions-runner-labels: gcp_4xL4-${{ github.sha }}
+    steps:
+      - run: echo "Generate metadata"
   myjob0:
     needs: [gcp-4xL4-metadata]
     uses: ./.github/workflows/reuseable.yml
