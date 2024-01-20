@@ -1,6 +1,10 @@
 name: CI
 on:
   workflow_call:
+    inputs:
+      myinput:
+        required: true
+        type: string
     outputs:
       myouypuy:
         value: ${{ jobs.myjob.outputs.myouypuy }}
@@ -10,6 +14,7 @@ jobs:
     outputs:
       myouypuy: ${{ steps.mystep.outputs.myouypuy }}
     steps:
+      - run: echo ${{ inputs.myinput }}
       - run: echo "123456"
       - id: mystep
         run: echo "myouypuy=1234567" >> ${GITHUB_OUTPUT}
