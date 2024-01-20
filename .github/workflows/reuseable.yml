@@ -8,6 +8,8 @@ on:
     outputs:
       myouypuy:
         value: ${{ jobs.myjob.outputs.myouypuy }}
+      myouypuy2:
+        value: ${{ inputs.myinput }}
 jobs:
   myjob:
     runs-on: ubuntu-latest
