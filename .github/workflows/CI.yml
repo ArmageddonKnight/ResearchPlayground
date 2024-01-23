@@ -15,8 +15,22 @@ on:
         type: string
         default: "123"
 jobs:
+  gcp-4xL4-metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      instance-name: pi-4xl4-${{ github.sha }}
+      pulumi-work-dir: ./.github/actions/pulumi/gcp_4xL4
+      github-actions-runner-labels: gcp_4xL4-${{ github.sha }}
+    steps:
+      - run: echo "Generate metadata"
+  myjob0:
+    needs: [gcp-4xL4-metadata]
+    uses: ./.github/workflows/reuseable.yml
+    with:
+      myinput: ${{ needs.gcp-4xL4-metadata.outputs.instance-name }}
   myjob:
     runs-on: ubuntu-latest
+    needs: myjob0
     outputs:
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
@@ -25,6 +39,10 @@ jobs:
           echo ${{ inputs.some-required-input }}
           echo ${{ inputs.some-default-input }}
       - uses: actions/checkout@v4
+      - run: echo ${{ needs.myjob0.inputs.myinpuy }}
+      - run: echo ${{ needs.myjob0.outputs.myouypuy }}
+      - run: echo ${{ needs.myjob0.outputs.myouypuy2 }}
+      - run: echo "==================================="
       - id: mystep
         run: |
           echo "123456" >> tmp.log
@@ -53,6 +71,16 @@ jobs:
     needs: [myjob]
     if: ${{ always() && needs.myjob.outputs.output1 == 1 }}
     steps:
+      - id: mystep
+        run: |
+          echo "123456" >> tmp.log
+          cat tmp.log
+          cat <<EOF > ${GITHUB_OUTPUT}
+          var1=123
+          var2=2
+      - run: |
+          echo ${{ steps.mystep.outputs.var1 }}
+          echo ${{ steps.mystep.outputs.var2 }}
       - name: >-
           output1=${{ needs.myjob.outputs.output1
           }}, output2=${{
