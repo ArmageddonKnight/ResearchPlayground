@@ -1,5 +1,19 @@
 name: CI
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      some-required-input:
+        description: "hello"
+        required: true
+        type: string
+      some-default-input:
+        description: "hello yourself"
+        required: false
+        type: string
+        default: "123"
 jobs:
   myjob:
     runs-on: ubuntu-latest
@@ -7,6 +21,9 @@ jobs:
       output1: ${{ steps.step1.outputs.test }}
       output2: ${{ steps.step2.outputs.test }}
     steps:
+      - run: |
+          echo ${{ inputs.some-required-input }}
+          echo ${{ inputs.some-default-input }}
       - uses: actions/checkout@v4
       - id: mystep
         run: |
