@@ -15,11 +15,11 @@ jobs:
       - run: |
           echo ${{ env.JSON_RESPONSE }}
 
-      - id: myoutput
+      - id: myoutput2
         run: |
           echo "JSON_RESPONSE<<EOF" >> ${GITHUB_OUTPUT}
           echo "hello" >> ${GITHUB_OUTPUT}
           echo "myopia" >> ${GITHUB_OUTPUT}
           echo "EOF" >> ${GITHUB_OUTPUT}
       - run: |
-          echo ${{ steps.myoutput.outputs.JSON_RESPONSE }}
+          echo ${{ steps.myoutput2.outputs.JSON_RESPONSE }}
