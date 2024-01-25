@@ -22,4 +22,4 @@ jobs:
           echo "myopia" >> ${GITHUB_OUTPUT}
           echo "EOF" >> ${GITHUB_OUTPUT}
       - run: |
-          echo ${{ steps.myoutput2.outputs.JSON_RESPONSE }}
+          echo "${{ steps.myoutput2.outputs.JSON_RESPONSE }}"
