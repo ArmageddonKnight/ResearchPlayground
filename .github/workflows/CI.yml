@@ -10,8 +10,8 @@ jobs:
       - id: myoutput
         run: |
           echo "JSON_RESPONSE <<EOF" >> ${GITHUB_OUTPUT}
-          hello >> ${GITHUB_OUTPUT}
-          myopia >> ${GITHUB_OUTPUT}
+          echo "hello" >> ${GITHUB_OUTPUT}
+          echo "myopia" >> ${GITHUB_OUTPUT}
           echo 'EOF' >> ${GITHUB_OUTPUT}
       - run: |
           echo ${{ steps.myoutput.outputs.JSON_RESPONSE }}
