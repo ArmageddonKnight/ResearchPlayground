@@ -9,9 +9,17 @@ jobs:
     steps:
       - id: myoutput
         run: |
-          echo "JSON_RESPONSE <<EOF" >> ${GITHUB_OUTPUT}
+          echo "JSON_RESPONSE<<EOF" >> ${GITHUB_ENV}
+          echo "hello" >> ${GITHUB_ENV}
+          echo "EOF" >> ${GITHUB_ENV}
+      - run: |
+          echo ${{ env.JSON_RESPONSE }}
+
+      - id: myoutput
+        run: |
+          echo "JSON_RESPONSE<<EOF" >> ${GITHUB_OUTPUT}
           echo "hello" >> ${GITHUB_OUTPUT}
           echo "myopia" >> ${GITHUB_OUTPUT}
-          echo 'EOF' >> ${GITHUB_OUTPUT}
+          echo "EOF" >> ${GITHUB_OUTPUT}
       - run: |
           echo ${{ steps.myoutput.outputs.JSON_RESPONSE }}
