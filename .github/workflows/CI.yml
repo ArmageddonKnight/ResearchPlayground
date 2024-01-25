@@ -3,113 +3,15 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      some-required-input:
-        description: "hello"
-        required: true
-        type: string
-      some-default-input:
-        description: "hello yourself"
-        required: false
-        type: string
-        default: "123"
 jobs:
-  gcp-4xL4-metadata:
-    runs-on: ubuntu-latest
-    outputs:
-      instance-name: pi-4xl4-${{ github.sha }}
-      pulumi-work-dir: ./.github/actions/pulumi/gcp_4xL4
-      github-actions-runner-labels: gcp_4xL4-${{ github.sha }}
-    steps:
-      - run: echo "Generate metadata"
   myjob0:
-    needs: [gcp-4xL4-metadata]
-    uses: ./.github/workflows/reuseable.yml
-    with:
-      myinput: ${{ needs.gcp-4xL4-metadata.outputs.instance-name }}
-  myjob:
     runs-on: ubuntu-latest
-    needs: myjob0
-    outputs:
-      output1: ${{ steps.step1.outputs.test }}
-      output2: ${{ steps.step2.outputs.test }}
     steps:
-      - run: |
-          echo ${{ inputs.some-required-input }}
-          echo ${{ inputs.some-default-input }}
-      - uses: actions/checkout@v4
-      - run: echo ${{ needs.myjob0.inputs.myinpuy }}
-      - run: echo ${{ needs.myjob0.outputs.myouypuy }}
-      - run: echo ${{ needs.myjob0.outputs.myouypuy2 }}
-      - run: echo "==================================="
-      - id: mystep
+      - id: myoutput
         run: |
-          echo "123456" >> tmp.log
-          cat tmp.log
-          cat <<EOF > ${GITHUB_OUTPUT}
-          var1=123
-          var2=234
-          EOF
+          echo "JSON_RESPONSE <<EOF" >> ${GITHUB_OUTPUT}
+          curl https://example.lab >> ${GITHUB_OUTPUT}
+          myopia >> ${GITHUB_OUTPUT}
+          echo 'EOF' >> ${GITHUB_OUTPUT}
       - run: |
-          echo ${{ steps.mystep.outputs.var1 }}
-          echo ${{ steps.mystep.outputs.var2 }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.12
-      - run: |
-          python --version
-          python -V
-          which python
-      - id: step1
-        run: echo "test=1" >> ${GITHUB_OUTPUT}
-      - run: exit -1
-      - id: step2
-        run: echo "test=2" >> ${GITHUB_OUTPUT}
-  myjob2:
-    runs-on: ubuntu-latest
-    needs: [myjob]
-    if: ${{ always() && needs.myjob.outputs.output1 == 1 }}
-    steps:
-      - id: mystep
-        run: |
-          echo "123456" >> tmp.log
-          cat tmp.log
-          cat <<EOF > ${GITHUB_OUTPUT}
-          var1=123
-          var2=2
-      - run: |
-          echo ${{ steps.mystep.outputs.var1 }}
-          echo ${{ steps.mystep.outputs.var2 }}
-      - name: >-
-          output1=${{ needs.myjob.outputs.output1
-          }}, output2=${{
-          needs.myjob.outputs.output2 }}
-        uses: actions/checkout@v4
-      - uses: ./.github/actions/action1
-      - uses: ./.github/actions/action1
-        continue-on-error: true
-        with:
-          some-input: something
-      - uses: ./.github/actions/action1
-        continue-on-error: true
-        with:
-          some-input: "something"
-      - if: ${{ success() }}
-        run: echo "success"
-      - if: ${{ failure() }}
-        run: echo "failure"
-      - uses: ./.github/actions/action2
-      - run: echo "PATH=${PATH}:${HOME}" >> ${GITHUB_ENV}
-      - run: |
-          cd ~
-          touch run.sh
-          chmod +x run.sh
-      - run: |
-          echo ${PATH}
-          which run.sh
-      - run: |
-          echo ${{ needs.myjob.outputs.output1 }}
-          echo ${{ needs.myjob.outputs.output1 == 1 }}
-          echo ${{ needs.myjob.outputs.output1 == '1' }}
-          echo ${{ needs.myjob.outputs.output2 }}
+          echo ${{ steps.myoutput.outputs.JSON_RESPONSE }}
