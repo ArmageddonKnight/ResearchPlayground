@@ -25,7 +25,7 @@ jobs:
           EOF
           )
           echo "JSON_RESPONSE<<EOF" >> ${GITHUB_OUTPUT}
-          echo "A" >> ${GITHUB_OUTPUT}
+          echo "$A" >> ${GITHUB_OUTPUT}
           echo "EOF" >> ${GITHUB_OUTPUT}
       - run: |
           echo "${{ steps.myoutput2.outputs.JSON_RESPONSE }}"
