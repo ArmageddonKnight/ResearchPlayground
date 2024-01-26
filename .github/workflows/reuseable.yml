@@ -12,6 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: exit 1
-      - if: ${{ success() || myflag != 'false' }}
+      - if: ${{ success() || inputs.myflag != 'false' }}
         run: |
           echo "Still running"
