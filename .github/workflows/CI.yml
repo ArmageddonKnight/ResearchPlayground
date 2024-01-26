@@ -17,9 +17,15 @@ jobs:
 
       - id: myoutput2
         run: |
+          A=$(
+            cat <<EOF
+          =AWEOIUFDNIJNFA
+          KJDNFIJXNFIDZHBNRGFIA
+          JNFKSJDNFJSNDJFS
+          EOF
+          )
           echo "JSON_RESPONSE<<EOF" >> ${GITHUB_OUTPUT}
-          echo "hello" >> ${GITHUB_OUTPUT}
-          echo "myopia" >> ${GITHUB_OUTPUT}
+          echo "A" >> ${GITHUB_OUTPUT}
           echo "EOF" >> ${GITHUB_OUTPUT}
       - run: |
           echo "${{ steps.myoutput2.outputs.JSON_RESPONSE }}"
