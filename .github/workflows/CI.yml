@@ -17,7 +17,8 @@ jobs:
       - id: myoutput
         run: |
           echo ${{ inputs.myflag }}
-      - uses: actions/checkout@v4
-      - uses: ./.github/workflows/reuseable.yml
-        with:
-          myflag: ${{ inputs.myflag }}
+      # - uses: actions/checkout@v4
+  myjob1:
+    uses: ./.github/workflows/reuseable.yml
+    with:
+      myflag: ${{ inputs.myflag }}
