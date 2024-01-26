@@ -20,4 +20,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/workflows/reuseable.yml
         with:
-          myflag: ${{ myflag }}
+          myflag: ${{ inputs.myflag }}
