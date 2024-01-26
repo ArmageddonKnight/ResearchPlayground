@@ -3,29 +3,21 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      myflag:
+        description: My flag.
+        required: false
+        type: boolean
+        default: false
 jobs:
   myjob0:
     runs-on: ubuntu-latest
     steps:
       - id: myoutput
         run: |
-          echo "JSON_RESPONSE<<EOF" >> ${GITHUB_ENV}
-          echo "hello" >> ${GITHUB_ENV}
-          echo "EOF" >> ${GITHUB_ENV}
-      - run: |
-          echo ${{ env.JSON_RESPONSE }}
-
-      - id: myoutput2
-        run: |
-          A=$(
-            cat <<EOF
-          =AWEOIUFDNIJNFA
-          KJDNFIJXNFIDZHBNRGFIA
-          JNFKSJDNFJSNDJFS
-          EOF
-          )
-          echo "JSON_RESPONSE<<EOF" >> ${GITHUB_OUTPUT}
-          echo "$A" >> ${GITHUB_OUTPUT}
-          echo "EOF" >> ${GITHUB_OUTPUT}
-      - run: |
-          echo "${{ steps.myoutput2.outputs.JSON_RESPONSE }}"
+          echo ${{ inputs.myflag }}
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/reuseable.yml
+        with:
+          myflag: ${{ myflag }}
