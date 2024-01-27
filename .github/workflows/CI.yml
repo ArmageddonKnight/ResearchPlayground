@@ -13,6 +13,7 @@ on:
 jobs:
   myjob0:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
       - name: Get a Registration Token for the GitHub Actions RUnner
         id: github-actions-runner-registration
