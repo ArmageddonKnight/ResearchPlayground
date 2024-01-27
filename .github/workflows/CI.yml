@@ -14,6 +14,32 @@ jobs:
   myjob0:
     runs-on: ubuntu-latest
     steps:
+      - name: Get a Registration Token for the GitHub Actions RUnner
+        id: github-actions-runner-registration
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ inputs.github-token }}
+          script: |
+            const token = await github.rest.actions.createRegistrationTokenForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            core.setOutput("token", token.data.token)
+      - name: Get a Remove Token for the GitHub Actions RUnner
+        id: github-actions-runner-remove
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ inputs.github-token }}
+          script: |
+            const token = await github.rest.actions.createRemoveTokenForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            core.setOutput("token", token.data.token)
+
+      - run: |
+          echo ${{ steps.github-actions-runner-registration.outputs.token }}
+          echo ${{ steps.github-actions-runner-remove.outputs.token }}
       - id: myoutput
         run: |
           echo ${{ inputs.myflag }}
