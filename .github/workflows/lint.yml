@@ -1,0 +1,8 @@
+name: CI
+on: [push]
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Hello World"
