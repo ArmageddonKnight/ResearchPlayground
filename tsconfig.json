@@ -5,17 +5,12 @@
     "moduleResolution": "node",
     "declaration": true,
     "outDir": "dist",
-    "lib": [
-      "ES2022"
-    ],
+    "lib": ["ES2022"],
     "isolatedModules": true,
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
   },
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+  "exclude": ["dist", "node_modules"],
 }
