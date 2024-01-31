@@ -1,0 +1,6 @@
+# Mypy
+.mypy_cache
+
+# NPM
+node_modules
+package-lock.json
