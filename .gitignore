@@ -4,3 +4,6 @@
 # NPM
 node_modules
 package-lock.json
+
+# Typescript
+dist
