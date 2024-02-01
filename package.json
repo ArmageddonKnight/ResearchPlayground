@@ -1,4 +1,8 @@
 {
+  "name": "research",
+  "bin": {
+    "yaml-verifier": "dist/cli.js"
+  },
   "dependencies": {
     "@types/node": "^20.11.14",
     "@typescript-eslint/eslint-plugin": "^6.20.0",

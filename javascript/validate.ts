@@ -39,7 +39,7 @@ async function _validate(
   files: string[],
   validationOptions: _ValidationOptions,
 ): Promise<_FileValidationResult[]> {
-  let workspaceContext: WorkspaceContextService = {
+  const workspaceContext: WorkspaceContextService = {
     resolveRelativePath: (relativePath: string, resource: string) => {
       return path.join(path.dirname(resource), relativePath);
     },
@@ -54,7 +54,7 @@ async function _validate(
 
   const yamlValidation = new YAMLValidation(
     schemaService,
-    new _ConsoleTelemetry() as any,
+    new _ConsoleTelemetry(),
   );
   yamlValidation.configure({
     validate: true,
@@ -95,7 +95,7 @@ async function _validateAndOutput(
   for (const validation_error of validation_errors) {
     for (const error of validation_error.diagnostic) {
       console.error(
-        `${error.source}:${error.range.start.line + 1}:${error.range.start.character + 1}: ${error.message}`,
+        `${error.code}:${error.range.start.line + 1}:${error.range.start.character + 1}: ${error.message}`,
       );
     }
   }
