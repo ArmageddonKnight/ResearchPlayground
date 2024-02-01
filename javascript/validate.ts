@@ -107,6 +107,6 @@ export async function validateWithSchema(
   options: _ValidationOptions,
   files: string[],
 ) {
-  console.log("Validating YAML files=", files);
+  console.log(`Validating YAML files=${files}`);
   return _validateAndOutput(files, options);
 }
