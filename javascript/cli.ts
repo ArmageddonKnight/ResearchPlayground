@@ -15,8 +15,7 @@ async function main() {
     .option("--yamlVersion", "The YAML version to use for validation")
     .action(async (schema, patterns, options) => {
       const error = await validateWithSchema(
-        { yamlVersion: options.yamlVersion },
-        schema,
+        { yamlVersion: options.yamlVersion, schema },
         patterns,
       );
       if (error !== undefined) {
