@@ -4,9 +4,6 @@ import { SchemaRequestService } from "yaml-language-server/out/server/src/langua
 
 export function createSchemaRequestHandler(): SchemaRequestService {
   return async (uri: string) => {
-    if (uri !== "") {
-      return Promise.reject("No schema specified.");
-    }
     console.log(`Schema used=${uri}`);
     return new Promise<string>((callback, error) => {
       const chunks: string[] = [];
