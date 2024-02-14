@@ -8,7 +8,7 @@ from torch.autograd.function import FunctionCtx
 class MulConstant(Function):
     @staticmethod
     def forward(  # type: ignore[override]
-       ctx: FunctionCtx, x: torch.Tensor, constant: int
+        x: torch.Tensor, constant: int
     ) -> torch.Tensor:
         return x * constant
 
@@ -27,3 +27,9 @@ class MulConstant(Function):
 
 
 print(MulConstant.apply(torch.tensor(3, dtype=torch.float32), 4))
+
+x = torch.tensor(3, dtype=torch.float32)
+x.requires_grad_(True)
+y = x * 4
+y.backward()
+print(x._grad)
